@@ -29,6 +29,14 @@ import torch
 
 import folder_paths
 
+try:
+    from audio_separator.separator import Separator
+except Exception as exc:  # keep ComfyUI loading even when the backend is missing
+    Separator = None
+    _BACKEND_ERROR = exc
+else:
+    _BACKEND_ERROR = None
+
 
 BRAND = "One Solo Studios"
 CATEGORY = f"{BRAND}/Audio/StemSplitter"
