@@ -1,0 +1,128 @@
+{
+  "id": "b7f1c2a4-93d8-4a1e-9c6f-0d5e7a8b1c23",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadAudio",
+      "pos": [80, 300],
+      "size": [320, 140],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "COMBO", "widget": { "name": "audio" }, "link": null },
+        { "name": "audioUI", "type": "AUDIO_UI", "widget": { "name": "audioUI" }, "link": null },
+        { "name": "upload", "type": "AUDIOUPLOAD", "widget": { "name": "upload" }, "link": null }
+      ],
+      "outputs": [
+        { "name": "AUDIO", "type": "AUDIO", "links": [1] }
+      ],
+      "properties": { "cnr_id": "comfy-core", "ver": "0.3.34", "Node name for S&R": "LoadAudio" },
+      "widgets_values": ["", null, null]
+    },
+    {
+      "id": 2,
+      "type": "StemSplitter",
+      "pos": [480, 260],
+      "size": [380, 110],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "AUDIO", "link": 1 },
+        { "name": "model", "type": "COMBO", "widget": { "name": "model" }, "link": null }
+      ],
+      "outputs": [
+        { "name": "stem_1", "type": "AUDIO", "links": [2, 3] },
+        { "name": "stem_2", "type": "AUDIO", "links": [4] }
+      ],
+      "properties": { "Node name for S&R": "StemSplitter" },
+      "widgets_values": ["Roformer Model: BS-Roformer-Viperx-1297"]
+    },
+    {
+      "id": 3,
+      "type": "PreviewAudio",
+      "pos": [920, 120],
+      "size": [320, 90],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "AUDIO", "link": 2 }
+      ],
+      "outputs": [
+        { "name": "audio", "type": "AUDIO", "links": null }
+      ],
+      "properties": { "cnr_id": "comfy-core", "ver": "0.3.34", "Node name for S&R": "PreviewAudio" },
+      "widgets_values": []
+    },
+    {
+      "id": 4,
+      "type": "StemSplitterFX",
+      "pos": [920, 280],
+      "size": [380, 100],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "AUDIO", "link": 3 },
+        { "name": "model", "type": "COMBO", "widget": { "name": "model" }, "link": null }
+      ],
+      "outputs": [
+        { "name": "processed", "type": "AUDIO", "links": [5] },
+        { "name": "removed", "type": "AUDIO", "links": null }
+      ],
+      "properties": { "Node name for S&R": "StemSplitterFX" },
+      "widgets_values": ["Roformer Model: Mel-Roformer-Denoise-Aufr33"]
+    },
+    {
+      "id": 5,
+      "type": "PreviewAudio",
+      "pos": [1360, 280],
+      "size": [320, 90],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "AUDIO", "link": 5 }
+      ],
+      "outputs": [
+        { "name": "audio", "type": "AUDIO", "links": null }
+      ],
+      "properties": { "cnr_id": "comfy-core", "ver": "0.3.34", "Node name for S&R": "PreviewAudio" },
+      "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "SaveAudio",
+      "pos": [920, 440],
+      "size": [380, 90],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        { "name": "audio", "type": "AUDIO", "link": 4 },
+        { "name": "filename_prefix", "type": "STRING", "widget": { "name": "filename_prefix" }, "link": null }
+      ],
+      "outputs": [
+        { "name": "audio", "type": "AUDIO", "links": null }
+      ],
+      "properties": { "cnr_id": "comfy-core", "ver": "0.3.34", "Node name for S&R": "SaveAudio" },
+      "widgets_values": ["audio/UVR5"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "AUDIO"],
+    [2, 2, 0, 3, 0, "AUDIO"],
+    [3, 2, 0, 4, 0, "AUDIO"],
+    [4, 2, 1, 6, 0, "AUDIO"],
+    [5, 4, 0, 5, 0, "AUDIO"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": { "ds": { "scale": 1, "offset": [0, 0] } },
+  "version": 0.4
+}
