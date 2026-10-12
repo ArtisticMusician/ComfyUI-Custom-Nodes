@@ -441,11 +441,8 @@ def _removed_stem(stems, clean_path):
 # --------------------------------------------------------------------------- #
 
 
-def _padded(value, padding):
-    """The number as text with `padding` extra zeros in front: 1 -> 01, 3 -> 0001."""
-    sign = "-" if value < 0 else ""
-    digits = str(abs(int(value)))
-    return sign + digits.zfill(len(digits) + int(padding))
+
+
 
 
 # Everything above is this module's surface, private helpers included: the split-out
