@@ -84,6 +84,7 @@ class Audio2MIDI:
 
     RETURN_TYPES = ("MIDI", "STRING")
     RETURN_NAMES = ("midi", "midi_path")
+    OUTPUT_NODE = True
     FUNCTION = "transcribe"
     CATEGORY = AUDIO_CATEGORY
     DESCRIPTION = "Audio to MIDI with Spotify's Basic Pitch. Writes a .mid file and returns it."
