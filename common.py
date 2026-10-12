@@ -1,0 +1,453 @@
+# Shared helpers for the whole pack.
+
+"""
+UVR5 Audio Suite — ComfyUI nodes for audio source separation and restoration.
+
+Engine: the ``audio-separator`` package (the UVR5 model ecosystem). It is a
+dependency of this environment; models are downloaded on first use into
+``<ComfyUI>/models/audio_separator/`` and cached for the lifetime of the process.
+
+Nodes
+-----
+UVR5 Audio Separator        two-stem separation (vocals/instrumental, lead/backing, ...)
+UVR5 Multi-Stem Separator   one-pass 4/6-stem Demucs separation
+UVR5 Audio Restoration      denoise / dereverb / de-echo using UVR restoration models
+"""
+
+import os
+import re
+import shutil
+import sys
+import tempfile
+import time
+from contextlib import contextmanager
+
+import comfy.audio
+import comfy.utils
+import soundfile as sf
+import torch
+
+import folder_paths
+
+
+BRAND = "One Solo Studios"
+CATEGORY = f"{BRAND}/Audio/StemSplitter"
+AUDIO_CATEGORY = f"{BRAND}/Audio"
+UTIL_CATEGORY = f"{BRAND}/Utils"
+
+# Demucs splits into 4 or 6 stems in a single pass. Each node below offers only the
+# models that produce the stems it has outputs for, so no output can ever be dead.
+_STEMS4 = ("vocals", "drums", "bass", "other")
+_STEMS6 = ("vocals", "drums", "bass", "guitar", "piano", "other")
+
+# The models offered in the dropdowns: the best two the library has for each of the
+# twelve processes in BuildGuide.md, so every stage has a choice.
+#
+# Ranked by audio-separator's own published SDR where it publishes one. The rest of the
+# catalogue (145 separator models: legacy checkpoints and community fine-tunes of the
+# same few bases) is deliberately not offered.
+#
+# The guide names commercial tools that have no headless build — Waves Clarity,
+# Accentize DeRoom2 and DX Revive, iZotope RX, Acon DeVerberate, LALAL.AI — and
+# DeepFilterNet, which is not installed. The open-source models below stand in for them.
+#
+# Every entry is (guide process, why this model, exact catalogue name). The dropdowns and
+# the cheat-sheet node both read these, so they cannot disagree.
+
+
+_CLEAN_STEM_NAMES = ("dry", "noreverb")
+_ARTIFACT_STEM_NAMES = ("noise", "reverb", "echo", "wet")
+
+
+def _model_dir() -> str:
+    """This pack's models, under the brand folder."""
+    path = os.path.join(folder_paths.models_dir, "OneSoloStudio", "audio_separator")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def _run_dir() -> str:
+    """Stable working directory for stems.
+
+    audio-separator captures its output directory when the model is loaded, so a
+    loaded engine cannot be pointed at a fresh temp dir per run; the directory is
+    therefore fixed and emptied before each separation.
+    """
+    path = os.path.join(tempfile.gettempdir(), "uvr5_audiosuite")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def _clear_dir(path: str) -> None:
+    for entry in os.listdir(path):
+        full = os.path.join(path, entry)
+        if os.path.isdir(full):
+            shutil.rmtree(full, ignore_errors=True)
+        else:
+            try:
+                os.remove(full)
+            except OSError:
+                pass
+
+
+def _require_backend() -> None:
+    if Separator is None:
+        raise RuntimeError(
+            "audio-separator is required by StemSplitter but could not be "
+            f"imported ({_BACKEND_ERROR}). Install it into the ComfyUI environment with: "
+            "pip install audio-separator"
+        )
+
+
+# --------------------------------------------------------------------------- #
+# Model catalogue — single source of truth is audio-separator's own model list
+# --------------------------------------------------------------------------- #
+# Used only when the catalogue cannot be loaded (e.g. first run with no network).
+_FALLBACK_CATALOG = {
+    "VR": {
+        "VR Arch Single Model v5: 1_HP-UVR":
+            {"filename": "1_HP-UVR.pth", "stems": ["instrumental", "vocals"]},
+        "VR Arch Single Model v5: UVR-DeNoise by FoxJoy":
+            {"filename": "UVR-DeNoise.pth", "stems": ["noise", "no noise"]},
+        "VR Arch Single Model v4: UVR-De-Reverb by aufr33-jarredou":
+            {"filename": "UVR-De-Reverb-aufr33-jarredou.pth", "stems": ["dry", "no dry"]},
+    },
+    "MDX": {
+        "MDX-Net Model: Kim Vocal 2":
+            {"filename": "Kim_Vocal_2.onnx", "stems": ["vocals", "instrumental"]},
+    },
+    "MDXC": {
+        "Roformer Model: BS-Roformer-Viperx-1297":
+            {"filename": "model_bs_roformer_ep_317_sdr_12.9755.ckpt", "stems": ["vocals", "instrumental"]},
+        "MDX23C Model: MDX23C-InstVoc HQ":
+            {"filename": "MDX23C-8KFFT-InstVoc_HQ.ckpt", "stems": ["vocals", "instrumental"]},
+    },
+    "Demucs": {
+        "Demucs v4: htdemucs":
+            {"filename": "htdemucs.yaml", "stems": ["vocals", "drums", "bass", "other"]},
+        "Demucs v4: htdemucs_6s":
+            {"filename": "htdemucs_6s.yaml", "stems": ["vocals", "drums", "bass", "guitar", "piano", "other"]},
+    },
+}
+
+_catalog = None
+
+
+def _catalog_models():
+    """{arch: {label: {"filename": str, "stems": [str]}}}, built once."""
+    global _catalog
+    if _catalog is not None:
+        return _catalog
+    try:
+        _require_backend()
+        probe = Separator(
+            model_file_dir=_model_dir(),
+            output_dir=_run_dir(),
+            output_format="wav",
+            log_level=50,
+        )
+        raw = probe.list_supported_model_files()
+        _catalog = {
+            arch: {
+                label: {"filename": info["filename"], "stems": list(info.get("stems") or [])}
+                for label, info in models.items()
+            }
+            for arch, models in raw.items()
+        }
+    except Exception as exc:
+        print(f"[UVR5] Could not read the model catalogue from audio-separator ({exc}); "
+              f"falling back to the built-in model list.")
+        _catalog = _FALLBACK_CATALOG
+    return _catalog
+
+
+def _choices(entries):
+    """The guide's model list, filtered to what the installed catalogue actually has."""
+    names = [name for _, _, name in entries]
+    available = {label for models in _catalog_models().values() for label in models}
+    chosen = [name for name in names if name in available]
+    missing = [name for name in names if name not in available]
+    if missing:
+        print(f"[UVR5] Not in the audio-separator catalogue: {missing}")
+    # Never hand ComfyUI an empty dropdown.
+    return chosen or sorted(available)
+
+
+def _resolve(label):
+    """label -> model info dict."""
+    for models in _catalog_models().values():
+        if label in models:
+            return models[label]
+    raise ValueError(
+        f"Model '{label}' is not in the audio-separator catalogue. "
+        "Press R to refresh the node, then pick another model."
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Engine + inference
+# --------------------------------------------------------------------------- #
+# One loaded Separator per model filename: loading is expensive, inference is not.
+_ENGINES = {}
+
+
+def _engine(filename: str) -> "Separator":
+    engine = _ENGINES.get(filename)
+    if engine is None:
+        _require_backend()
+        engine = Separator(
+            model_file_dir=_model_dir(),
+            output_dir=_run_dir(),
+            output_format="wav",
+            sample_rate=44100,
+            log_level=30,
+        )
+        engine.load_model(filename)  # downloads the weights on first use
+        _ENGINES[filename] = engine
+    return engine
+
+
+_STEM_TAG = re.compile(r"_\(([^()]+)\)")
+
+
+def _write_wav(path, waveform, sample_rate):
+    wav = waveform.detach().cpu().float()
+    if wav.dim() == 1:
+        wav = wav.unsqueeze(0)
+    if wav.shape[0] == 1:  # separation models expect stereo
+        wav = wav.repeat(2, 1)
+    sf.write(path, wav.numpy().T, int(sample_rate))
+
+
+def _to_comfy_audio(path):
+    data, sample_rate = sf.read(path, dtype="float32", always_2d=True)  # [samples, channels]
+    waveform = torch.from_numpy(data.T).contiguous()
+    return {"waveform": waveform.unsqueeze(0), "sample_rate": int(sample_rate)}
+
+
+def _saved_file(path):
+    """A file entry for the frontend's Save as button, relative to the output folder."""
+    folder = folder_paths.get_output_directory()
+    rel = os.path.relpath(os.path.dirname(path), folder).replace(os.sep, "/")
+    return {
+        "filename": os.path.basename(path),
+        "subfolder": "" if rel == "." else rel,
+        "type": "output",
+    }
+
+
+# Opus only accepts these sample rates, so other rates are moved to the next one up.
+_OPUS_RATES = (8000, 12000, 16000, 24000, 48000)
+
+# Container and encoder PyAV uses per format - the same choices ComfyUI's own audio nodes
+# make. WAV is not here: it is written directly by soundfile, which is what the save node
+# and this pack work in.
+_AV_CONTAINERS = {"flac": "flac", "mp3": "mp3", "opus": "opus"}
+_AV_ENCODERS = {"flac": "flac", "mp3": "libmp3lame", "opus": "libopus"}
+
+
+def _write_compressed(wav, sample_rate, path, fmt, quality):
+    """Write one clip as flac, mp3 or opus.
+
+    Encoding goes through PyAV, the library ComfyUI's own audio nodes save through, with
+    the same encoders they pick - soundfile cannot write any of these three. Opus only
+    accepts a few sample rates, so anything else is moved to the next one up first.
+    """
+    import av
+
+    rate = sample_rate
+    if fmt == "opus":
+        if rate > 48000:
+            rate = 48000
+        elif rate not in _OPUS_RATES:
+            rate = next((r for r in _OPUS_RATES if r > rate), 48000)
+
+    samples = wav.float()
+    if rate != sample_rate:
+        samples = comfy.audio.resample(samples, sample_rate, rate)
+
+    layout = "mono" if samples.shape[0] == 1 else "stereo"
+    container = av.open(path, mode="w", format=_AV_CONTAINERS[fmt])
+    stream = container.add_stream(_AV_ENCODERS[fmt], rate=rate, layout=layout)
+    if fmt in ("mp3", "opus"):  # the lossy two; flac is lossless
+        stream.bit_rate = int(str(quality).rstrip("k")) * 1000
+
+    frame = av.AudioFrame.from_ndarray(
+        samples.movedim(0, 1).reshape(1, -1).numpy(),
+        format="flt",
+        layout=layout,
+    )
+    frame.sample_rate = rate
+    frame.pts = 0
+    container.mux(stream.encode(frame))
+    container.mux(stream.encode(None))
+    container.close()
+
+
+def _output_path(filename_prefix, ext, stamp=None, index=None):
+    """Where a node writes, always inside ComfyUI's output folder.
+
+    ComfyUI's own resolver does the work: it applies the ``%year%``-style variables,
+    allows subfolders in the prefix ("stems/song/vocals"), creates the folder, and
+    refuses anything that points outside the output directory.
+
+    ``stamp`` set  -> name_<stamp>.ext: a new file per run, which is what you want while
+                      iterating, and it never overwrites anything.
+    ``stamp`` None -> ComfyUI's own counter: name_00001.ext, so a re-run adds a file
+                      instead of replacing one.
+    """
+    folder = folder_paths.get_output_directory()
+    out, name, counter, _, _ = folder_paths.get_save_image_path(filename_prefix, folder)
+    if stamp is None:
+        return os.path.join(out, f"{name}_{counter + (index or 0):05}.{ext}")
+
+    name = f"{name}_{stamp}" + (f"_{index:02}" if index is not None else "")
+    path = os.path.join(out, f"{name}.{ext}")
+    bump = 2
+    while os.path.exists(path):  # two runs inside the same second
+        path = os.path.join(out, f"{name}-{bump}.{ext}")
+        bump += 1
+    return path
+
+
+def _input_waveform(audio):
+    waveform = audio["waveform"]
+    if waveform.dim() == 3:
+        if waveform.shape[0] > 1:
+            print(f"[UVR5] Audio batch has {waveform.shape[0]} items; processing the first only.")
+        waveform = waveform[0]
+    return waveform, int(audio["sample_rate"])
+
+
+# ComfyUI draws a node's progress bar from the updates that node sends. The separation
+# engine reports no percentage of its own, so we send the phases we know, and refine the
+# middle of the bar from the progress the engine prints while it works.
+_PCT = re.compile(r"(\d{1,3})%\|")
+
+
+class _StderrWatcher:
+    """Lets stderr through untouched, while watching it for the engine's own progress."""
+
+    def __init__(self, underlying, report):
+        self._underlying = underlying
+        self._report = report
+        self._tail = ""
+
+    def write(self, text):
+        self._tail = (self._tail + text)[-160:]
+        found = _PCT.findall(self._tail)
+        if found:  # the newest percentage in the buffer, not every one still in it
+            self._report(min(int(found[-1]), 100))
+        return self._underlying.write(text)
+
+    def flush(self):
+        return self._underlying.flush()
+
+    def __getattr__(self, name):
+        return getattr(self._underlying, name)
+
+
+@contextmanager
+def _separation(filename: str, waveform, sample_rate, pbar=None):
+    """Run ``filename`` over the waveform; yields [(stem_name, output_path), ...]."""
+    sent = {"value": -1}
+
+    def report(value):
+        # The bar only ever moves forward; the engine's own output can arrive out of order.
+        if pbar is None or value <= sent["value"]:
+            return
+        sent["value"] = value
+        pbar.update_absolute(value)
+
+    # Where the engine's own progress lands on the bar. Downloading a model for the first
+    # time is by far the longest wait there is, so its window gets real room; a model
+    # already on disk loads in a moment, so its window stays small.
+    downloading = not os.path.exists(os.path.join(_model_dir(), filename))
+    window = {"lo": 2, "hi": 60 if downloading else 10}
+
+    def refine(pct):
+        report(window["lo"] + pct * (window["hi"] - window["lo"]) // 100)
+
+    report(2)
+    workdir = _run_dir()
+    _clear_dir(workdir)
+    # The engine prints its own progress to stderr; watch it without swallowing it.
+    real_stderr, sys.stderr = sys.stderr, _StderrWatcher(sys.stderr, refine)
+    try:
+        engine = _engine(filename)
+        ready = window["hi"]
+        report(ready)
+        window["lo"], window["hi"] = ready, 95
+        source = os.path.join(workdir, "input.wav")
+        _write_wav(source, waveform, sample_rate)
+        produced = engine.separate(source)
+        report(96)
+        stems = []
+        for path in produced:
+            # audio-separator returns bare filenames for single-model runs.
+            if not os.path.isabs(path):
+                path = os.path.join(workdir, path)
+            if not os.path.exists(path):
+                raise RuntimeError(f"audio-separator reported a missing output file: {path}")
+            tag = _STEM_TAG.search(os.path.basename(path))
+            name = tag.group(1) if tag else os.path.splitext(os.path.basename(path))[0]
+            stems.append((name, path))
+        report(100)
+        yield stems
+    finally:
+        sys.stderr = real_stderr
+        _clear_dir(workdir)
+
+
+def _norm(name: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", name.lower())
+
+
+def _ordered_stems(stems, declared):
+    """Order stems as the model declares them (primary stem first).
+
+    audio-separator returns output files in an arbitrary order, so the catalogue's
+    declared stem order is used to make ``stem_1`` deterministic and meaningful.
+    Stems the model does not declare keep their relative position at the end.
+    """
+    if not declared:
+        return stems
+    index = {_norm(name): i for i, name in enumerate(declared)}
+    return sorted(stems, key=lambda item: index.get(_norm(item[0]), len(declared)))
+
+
+def _clean_stem(stems):
+    """Pick the cleaned stem produced by a restoration model."""
+    for name, path in stems:
+        lowered = name.strip().lower()
+        if lowered.startswith("no ") or lowered in _CLEAN_STEM_NAMES:
+            return name, path
+    for name, path in stems:
+        if name.strip().lower() not in _ARTIFACT_STEM_NAMES:
+            return name, path
+    return stems[0]
+
+
+def _removed_stem(stems, clean_path):
+    """The artifact stem: whatever the model took out of the signal."""
+    for name, path in stems:
+        if path != clean_path:
+            return name, path
+    raise RuntimeError(f"only one stem came back ({stems[0][0]}); nothing was removed.")
+
+
+# --------------------------------------------------------------------------- #
+# Nodes
+# --------------------------------------------------------------------------- #
+
+
+def _padded(value, padding):
+    """The number as text with `padding` extra zeros in front: 1 -> 01, 3 -> 0001."""
+    sign = "-" if value < 0 else ""
+    digits = str(abs(int(value)))
+    return sign + digits.zfill(len(digits) + int(padding))
+
+
+# Everything above is this module's surface, private helpers included: the split-out
+# modules pull from here with `import *`, which otherwise skips underscore names.
+__all__ = [name for name in dir() if not name.startswith("__")]
