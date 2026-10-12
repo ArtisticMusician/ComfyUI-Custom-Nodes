@@ -60,7 +60,7 @@ class Audio2MIDI:
             "required": {
                 "audio": ("AUDIO",),
                 "filename_prefix": ("STRING", {
-                    "default": "audio2midi",
+                    "default": "audio/StemSplitter",
                     "tooltip": "Name, and optionally a subfolder, inside ComfyUI's output folder.",
                 }),
                 "timestamp": ("BOOLEAN", {

@@ -11,7 +11,7 @@ Shared helpers live in common.py. Front end scripts live in web/.
 """
 
 from .Audio.Audio2MIDI.nodes import Audio2MIDI
-from .Audio.AudioSave.nodes import AudioConvert, AudioSave
+from .Audio.AudioSave.nodes import AudioConvert, AudioSave, StemSave
 from .Audio.StemSplitter.cheatsheet import StemSplitterCheatsheet
 from .Audio.StemSplitter.nodes import (
     StemSplitter,
@@ -31,6 +31,7 @@ NODE_CLASS_MAPPINGS = {
     "Audio2MIDI": Audio2MIDI,
     "AudioSave": AudioSave,
     "AudioConvert": AudioConvert,
+    "StemSave": StemSave,
     "Increment": Increment,
     # Registered last, so it comes last in its folder.
     "StemSplitterCheatsheet": StemSplitterCheatsheet,

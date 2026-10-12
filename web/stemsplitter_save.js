@@ -14,7 +14,7 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-const SAVE_NODES = ["AudioSave", "AudioConvert", "Audio2MIDI"];
+const SAVE_NODES = ["AudioSave", "AudioConvert", "Audio2MIDI", "StemSave"];
 const PLAYER_NODES = ["AudioSave", "AudioConvert"]; // Audio2MIDI writes MIDI, so it has no audio to play
 
 const WAVE_HEIGHT = 36;
