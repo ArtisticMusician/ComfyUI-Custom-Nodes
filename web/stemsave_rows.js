@@ -1,16 +1,17 @@
 /**
- * StemSave - keep the node down to the rows you are actually using.
+ * StemSave's front end, two jobs:
  *
- * The node declares twenty inputs and twenty outputs up front, because ComfyUI fixes both
- * when the class is written and will not grow them at run time. Twenty empty sockets is a
- * useless tower, so the trailing ones are dropped, never a connected one, leaving a single
- * spare row to wire. Connecting the spare brings the next pair into view; disconnecting
- * takes them away again.
+ * 1. Keep the node down to the rows in use. Twenty inputs and twenty outputs are declared
+ *    up front, because ComfyUI fixes both when the class is written and will not grow them
+ *    at run time. Twenty empty sockets is a useless tower, so the trailing ones are
+ *    dropped - never a connected one - leaving a single spare row to wire. Only unused rows
+ *    are ever removed, so what remains is always the first N and re-adding appends in order.
  *
- * Only rows that are unused are ever removed, so the ones that remain are always the first
- * N - which means re-adding appends in the right order.
+ * 2. Give every stem the run wrote its own waveform and player, under the node, labelled
+ *    with the name typed on its row.
  */
 import { app } from "../../scripts/app.js";
+import { PLAYER_HEIGHT, loadPlayer, makePlayer } from "./audio_player.js";
 
 const ROWS = 20;
 const ROW_INPUTS = (row) => [`audio_${row}`, `name_${row}`];
@@ -34,6 +35,7 @@ function remember(node) {
 
 const wired = (slot) => slot != null && slot.link != null;
 const connected = (slot) => slot != null && (slot.links ?? []).length > 0;
+const hidden = (box) => box.style.display === "none";
 
 function reconcile(node) {
     const defs = remember(node);
@@ -53,7 +55,7 @@ function reconcile(node) {
         if (index >= 0 && !connected(node.outputs[index])) node.removeOutput(index);
     }
 
-    // Put back anything the trim above took away in an earlier pass, in row order.
+    // Put back anything an earlier pass took away, in row order.
     for (let row = 1; row <= keep; row++) {
         for (const name of ROW_INPUTS(row)) {
             if (node.inputs?.some((i) => i.name === name)) continue;
@@ -67,6 +69,39 @@ function reconcile(node) {
 
     const size = node.computeSize();
     node.setSize([Math.max(node.size[0], size[0]), Math.max(node.size[1], size[1])]);
+}
+
+/** One player per row, built once and hidden until that row has written a file. */
+function playersFor(node) {
+    if (node.stemsavePlayers) return node.stemsavePlayers;
+    const players = [];
+    for (let row = 0; row < ROWS; row++) {
+        const player = makePlayer();
+        player.box.style.display = "none";
+        const widget = node.addDOMWidget(`stemsave_player_${row}`, "stem", player.box,
+                                         { serialize: false });
+        widget.computeSize = (width) => [width, hidden(player.box) ? 0 : PLAYER_HEIGHT];
+        players.push(player);
+    }
+    node.stemsavePlayers = players;
+    return players;
+}
+
+function showStems(node, stems) {
+    const players = playersFor(node);
+    players.forEach((player, row) => {
+        const stem = stems?.[row];
+        if (!stem?.files?.length) {
+            if (!hidden(player.box)) {
+                player.box.style.display = "none";
+                player.audio.removeAttribute("src");
+            }
+            return;
+        }
+        player.box.style.display = "flex";
+        loadPlayer(player, stem.files[0], stem.name);
+    });
+    node.setDirtyCanvas(true, true);
 }
 
 app.registerExtension({
@@ -91,6 +126,12 @@ app.registerExtension({
         nodeType.prototype.onConnectionsChange = function () {
             onConnectionsChange?.apply(this, arguments);
             reconcile(this);
+        };
+
+        const onExecuted = nodeType.prototype.onExecuted;
+        nodeType.prototype.onExecuted = function (message) {
+            onExecuted?.apply(this, arguments);
+            showStems(this, message?.stem_save_stems);
         };
     },
 });

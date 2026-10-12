@@ -170,7 +170,7 @@ class StemSave:
         # Every wired row arrives here as audio_<n>, with its own name_<n> beside it; the
         # rows that are not wired are simply absent.
         stamp = time.strftime("%Y%m%d-%H%M%S") if timestamp else None
-        saved, returned = [], []
+        saved, returned, written = [], [], []
 
         for row in range(1, self.ROWS + 1):
             audio = stems.get(f"audio_{row}")
@@ -189,14 +189,18 @@ class StemSave:
             waveform = audio["waveform"].detach().cpu().float()
             sample_rate = int(audio["sample_rate"])
             batch = waveform.shape[0] if waveform.dim() == 3 else 1
+            row_files = []
             for batch_number, wav in enumerate(waveform if waveform.dim() == 3 else [waveform]):
                 if wav.dim() == 1:
                     wav = wav.unsqueeze(0)
                 path = _output_path(f"{filename_prefix.rstrip('/')}/{name}", "wav", stamp,
                                     index=batch_number if batch > 1 else None)
                 sf.write(path, wav.numpy().T, sample_rate)
-                saved.append(_saved_file(path))
+                entry = _saved_file(path)
+                row_files.append(entry)
+                saved.append(entry)
 
+            written.append({"name": name, "files": row_files})
             returned.append(audio)
 
         if saved:
@@ -204,8 +208,11 @@ class StemSave:
         else:
             print("[UVR5] StemSave: nothing wired, nothing written")
 
+        # stem_save_stems pairs each row with the files it wrote, so the node can draw one
+        # waveform and player per stem instead of guessing which file belongs to which row.
         return {"ui": {"stem_splitter_files": saved,
-                       "stem_splitter_prefix": [filename_prefix]},
+                       "stem_splitter_prefix": [filename_prefix],
+                       "stem_save_stems": written},
                 "result": tuple(returned)}
 
 
