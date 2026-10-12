@@ -8,7 +8,8 @@
  *    are ever removed, so what remains is always the first N and re-adding appends in order.
  *
  * 2. Give every stem the run wrote its own waveform and player, under the node, labelled
- *    with the name typed on its row.
+ *    with the name typed on its row. The waveform is the same drawing the single-file
+ *    savers use, from audio_player.js.
  */
 import { app } from "../../scripts/app.js";
 import { PLAYER_HEIGHT, loadPlayer, makePlayer } from "./audio_player.js";
@@ -36,6 +37,13 @@ function remember(node) {
 const wired = (slot) => slot != null && slot.link != null;
 const connected = (slot) => slot != null && (slot.links ?? []).length > 0;
 const hidden = (box) => box.style.display === "none";
+
+/** Grow the node to fit whatever is showing, never shrink past what the user chose. */
+function fit(node) {
+    const size = node.computeSize();
+    node.setSize([Math.max(node.size[0], size[0]), Math.max(node.size[1], size[1])]);
+    node.setDirtyCanvas(true, true);
+}
 
 function reconcile(node) {
     const defs = remember(node);
@@ -67,8 +75,7 @@ function reconcile(node) {
         }
     }
 
-    const size = node.computeSize();
-    node.setSize([Math.max(node.size[0], size[0]), Math.max(node.size[1], size[1])]);
+    fit(node);
 }
 
 /** One player per row, built once and hidden until that row has written a file. */
@@ -98,10 +105,11 @@ function showStems(node, stems) {
             }
             return;
         }
+        // Shown before the waveform is drawn, so the canvas is measured at its real width.
         player.box.style.display = "flex";
         loadPlayer(player, stem.files[0], stem.name);
     });
-    node.setDirtyCanvas(true, true);
+    fit(node);
 }
 
 app.registerExtension({
