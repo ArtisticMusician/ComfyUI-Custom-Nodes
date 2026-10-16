@@ -40,11 +40,16 @@ Then put the pack in `ComfyUI/custom_nodes/` and restart ComfyUI.
 ## Where the nodes appear
 
 ```
-One Solo Studios/Audio/StemSplitter    StemSplitter, StemSplitter4, StemSplitter6,
-                                       StemSplitterFX, StemSplitterSAM,
-                                       StemSplitter Cheatsheet
-One Solo Studios/Audio                 Audio2MIDI, AudioSave, AudioConvert
-One Solo Studios/Utils                 Increment
+One Solo Studios/Audio/IO/AudioLoader      AudioLoader
+One Solo Studios/Audio/IO/AudioSave        AudioSave
+One Solo Studios/Audio/IO/StemSave         StemSave
+One Solo Studios/Audio/IO/AudioConvert     AudioConvert
+One Solo Studios/Audio/Tools/PhaseInvert   PhaseInvert
+One Solo Studios/Audio/Tools/Audio2MIDI    Audio2MIDI
+One Solo Studios/Audio/StemSplitter        StemSplitter, StemSplitter4, StemSplitter6,
+                                           StemSplitterFX, StemSplitterSAM, StemSplitterDrums,
+                                           StemEnsemble, StemSplitter Cheatsheet
+One Solo Studios/Utils                     Increment, TextMerge
 ```
 
 The search box matches "oss" and "one solo studios" as well as the node name.
@@ -54,8 +59,8 @@ The search box matches "oss" and "one solo studios" as well as the node name.
 Weights are fetched on first use — nothing to download by hand:
 
 ```
-ComfyUI/models/OneSoloStudio/audio_separator/   UVR5 / Roformer / MDX checkpoints
-ComfyUI/models/OneSoloStudio/sam_audio/         SAM-Audio checkpoints
+ComfyUI/models/One Solo Studios/audio_separator/   UVR5 / Roformer / MDX checkpoints
+ComfyUI/models/One Solo Studios/sam_audio/         SAM-Audio checkpoints
 ```
 
 Deleting a file from those folders is safe; it comes back the next time that model is picked.
@@ -80,3 +85,14 @@ Only `Audio2MIDI` needs it; every other node works without it.
 The catalogue could not be read from `audio-separator` (usually no network on a first run),
 so the node falls back to a short built-in list. Check the console for a `[UVR5]` line,
 restore connectivity, and press **R** to refresh the node definitions.
+
+**Edits to this pack are not showing up in ComfyUI**
+Node classes are imported once at startup, so a running ComfyUI keeps serving the definitions
+it loaded, and pressing **R** in the browser does not reload them. From this repo:
+
+    python tools/reload_comfyui.py            # says what the server has now; changes nothing
+    python tools/reload_comfyui.py --restart  # reloads it
+
+The first command also points the Music install's `custom_nodes` at this repo, and reads the
+definitions back from the running server so the answer is its own, not a guess. Only `--restart`
+reloads, and it takes the server down and up, so it interrupts whatever is on the canvas.

@@ -1,0 +1,2319 @@
+{
+  "id": "07ec5bde-c74a-4348-9cb2-7a74829fc41b",
+  "revision": 0,
+  "last_node_id": 19,
+  "last_link_id": 37,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "AudioLoader",
+      "pos": [
+        30,
+        330
+      ],
+      "size": [
+        380,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "COMBO",
+          "widget": {
+            "name": "audio"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AudioLoader"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 2,
+      "type": "StemSplitter",
+      "pos": [
+        250,
+        330
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            2,
+            3,
+            7,
+            8
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            4,
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "Roformer Model: BS-Roformer-Viperx-1297"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "StemSplitter",
+      "pos": [
+        470,
+        150
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "Roformer Model: MelBand Roformer | Vocals by Kimberley Jensen"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "StemEnsemble",
+      "pos": [
+        700,
+        150
+      ],
+      "size": [
+        380,
+        60
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "algorithm",
+          "type": "COMBO",
+          "widget": {
+            "name": "algorithm"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 3
+        },
+        {
+          "name": "opposite_1",
+          "type": "AUDIO",
+          "link": 4
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 5
+        },
+        {
+          "name": "opposite_2",
+          "type": "AUDIO",
+          "link": 6
+        },
+        {
+          "name": "audio_3",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_3",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_4",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_4",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_5",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_5",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_6",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_6",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_7",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_7",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_8",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_8",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "links": [
+            23
+          ]
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemEnsemble"
+      },
+      "widgets_values": [
+        "Loudest Wins by Frequency"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "StemSplitter",
+      "pos": [
+        470,
+        300
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 7
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "Roformer Model: Mel-Roformer-Karaoke-Aufr33-Viperx"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "StemSplitter",
+      "pos": [
+        470,
+        420
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 8
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "VR Arch Single Model v5: 6_HP-Karaoke-UVR"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "StemEnsemble",
+      "pos": [
+        700,
+        330
+      ],
+      "size": [
+        380,
+        60
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "algorithm",
+          "type": "COMBO",
+          "widget": {
+            "name": "algorithm"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 9
+        },
+        {
+          "name": "opposite_1",
+          "type": "AUDIO",
+          "link": 10
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 11
+        },
+        {
+          "name": "opposite_2",
+          "type": "AUDIO",
+          "link": 12
+        },
+        {
+          "name": "audio_3",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_3",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_4",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_4",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_5",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_5",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_6",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_6",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_7",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_7",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "audio_8",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "opposite_8",
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "links": [
+            24
+          ]
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemEnsemble"
+      },
+      "widgets_values": [
+        "Quietest Wins by Frequency"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "StemSplitter",
+      "pos": [
+        950,
+        330
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 13
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            14,
+            15,
+            16,
+            17,
+            18
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "MDX-Net Model: kuielab_a_drums"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "StemSplitterDrums",
+      "pos": [
+        1200,
+        150
+      ],
+      "size": [
+        380,
+        182
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 14
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "kick",
+          "type": "AUDIO",
+          "links": [
+            25
+          ]
+        },
+        {
+          "name": "snare",
+          "type": "AUDIO",
+          "links": [
+            26
+          ]
+        },
+        {
+          "name": "toms",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "hi_hat",
+          "type": "AUDIO",
+          "links": [
+            27
+          ]
+        },
+        {
+          "name": "ride",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "crash",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterDrums"
+      },
+      "widgets_values": [
+        "MDX23C Model: MDX23C DrumSep by aufr33-jarredou"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        30
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 15
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            28
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "bongos",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 11,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        130
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 16
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            29
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "shakers",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 12,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        230
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 17
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            30
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "tambourine",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        330
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 18
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            31
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "percussion",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 14,
+      "type": "StemSplitter",
+      "pos": [
+        950,
+        520
+      ],
+      "size": [
+        380,
+        102
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 19
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": [
+            32
+          ]
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": [
+            20,
+            21,
+            22
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter"
+      },
+      "widgets_values": [
+        "MDX-Net Model: kuielab_a_bass"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "StemSplitter6",
+      "pos": [
+        1200,
+        520
+      ],
+      "size": [
+        380,
+        182
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 20
+        },
+        {
+          "name": "model",
+          "type": "COMBO",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "vocals",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "drums",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "bass",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "guitar",
+          "type": "AUDIO",
+          "links": [
+            33
+          ]
+        },
+        {
+          "name": "piano",
+          "type": "AUDIO",
+          "links": [
+            34
+          ]
+        },
+        {
+          "name": "other",
+          "type": "AUDIO",
+          "links": [
+            37
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitter6"
+      },
+      "widgets_values": [
+        "Demucs v4: htdemucs_6s"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        520
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 21
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            35
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "strings",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 17,
+      "type": "StemSplitterSAM",
+      "pos": [
+        1470,
+        620
+      ],
+      "size": [
+        380,
+        282
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 22
+        },
+        {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "name": "precision",
+          "type": "COMBO",
+          "widget": {
+            "name": "precision"
+          },
+          "link": null
+        },
+        {
+          "name": "predict_spans",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "predict_spans"
+          },
+          "link": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "seed__control",
+          "type": "COMBO",
+          "widget": {
+            "name": "seed__control"
+          },
+          "link": null
+        },
+        {
+          "name": "inference_steps",
+          "type": "INT",
+          "widget": {
+            "name": "inference_steps"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_duration",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_duration"
+          },
+          "link": null
+        },
+        {
+          "name": "chunk_overlap",
+          "type": "FLOAT",
+          "widget": {
+            "name": "chunk_overlap"
+          },
+          "link": null
+        },
+        {
+          "name": "reranking_candidates",
+          "type": "INT",
+          "widget": {
+            "name": "reranking_candidates"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "target",
+          "type": "AUDIO",
+          "links": [
+            36
+          ]
+        },
+        {
+          "name": "residual",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSplitterSAM"
+      },
+      "widgets_values": [
+        "facebook/sam-audio-large",
+        "brass",
+        "auto",
+        false,
+        0,
+        "randomize",
+        32,
+        10.0,
+        1.0,
+        1
+      ]
+    },
+    {
+      "id": 18,
+      "type": "StemSave",
+      "pos": [
+        1750,
+        300
+      ],
+      "size": [
+        420,
+        60
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "name": "timestamp",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "timestamp"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "link": 23
+        },
+        {
+          "name": "name_1",
+          "type": "STRING",
+          "widget": {
+            "name": "name_1"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_2",
+          "type": "AUDIO",
+          "link": 24
+        },
+        {
+          "name": "name_2",
+          "type": "STRING",
+          "widget": {
+            "name": "name_2"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_3",
+          "type": "AUDIO",
+          "link": 25
+        },
+        {
+          "name": "name_3",
+          "type": "STRING",
+          "widget": {
+            "name": "name_3"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_4",
+          "type": "AUDIO",
+          "link": 26
+        },
+        {
+          "name": "name_4",
+          "type": "STRING",
+          "widget": {
+            "name": "name_4"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_5",
+          "type": "AUDIO",
+          "link": 27
+        },
+        {
+          "name": "name_5",
+          "type": "STRING",
+          "widget": {
+            "name": "name_5"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_6",
+          "type": "AUDIO",
+          "link": 28
+        },
+        {
+          "name": "name_6",
+          "type": "STRING",
+          "widget": {
+            "name": "name_6"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_7",
+          "type": "AUDIO",
+          "link": 29
+        },
+        {
+          "name": "name_7",
+          "type": "STRING",
+          "widget": {
+            "name": "name_7"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_8",
+          "type": "AUDIO",
+          "link": 30
+        },
+        {
+          "name": "name_8",
+          "type": "STRING",
+          "widget": {
+            "name": "name_8"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_9",
+          "type": "AUDIO",
+          "link": 31
+        },
+        {
+          "name": "name_9",
+          "type": "STRING",
+          "widget": {
+            "name": "name_9"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_10",
+          "type": "AUDIO",
+          "link": 32
+        },
+        {
+          "name": "name_10",
+          "type": "STRING",
+          "widget": {
+            "name": "name_10"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_11",
+          "type": "AUDIO",
+          "link": 33
+        },
+        {
+          "name": "name_11",
+          "type": "STRING",
+          "widget": {
+            "name": "name_11"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_12",
+          "type": "AUDIO",
+          "link": 34
+        },
+        {
+          "name": "name_12",
+          "type": "STRING",
+          "widget": {
+            "name": "name_12"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_13",
+          "type": "AUDIO",
+          "link": 35
+        },
+        {
+          "name": "name_13",
+          "type": "STRING",
+          "widget": {
+            "name": "name_13"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_14",
+          "type": "AUDIO",
+          "link": 36
+        },
+        {
+          "name": "name_14",
+          "type": "STRING",
+          "widget": {
+            "name": "name_14"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_15",
+          "type": "AUDIO",
+          "link": 37
+        },
+        {
+          "name": "name_15",
+          "type": "STRING",
+          "widget": {
+            "name": "name_15"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_16",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "name_16",
+          "type": "STRING",
+          "widget": {
+            "name": "name_16"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_17",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "name_17",
+          "type": "STRING",
+          "widget": {
+            "name": "name_17"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_18",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "name_18",
+          "type": "STRING",
+          "widget": {
+            "name": "name_18"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_19",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "name_19",
+          "type": "STRING",
+          "widget": {
+            "name": "name_19"
+          },
+          "link": null
+        },
+        {
+          "name": "audio_20",
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "name_20",
+          "type": "STRING",
+          "widget": {
+            "name": "name_20"
+          },
+          "link": null
+        },
+        {
+          "name": "float32",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "float32"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_3",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_4",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_5",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_6",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_7",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_8",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_9",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_10",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_11",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_12",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_13",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_14",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_15",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_16",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_17",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_18",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_19",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_20",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StemSave"
+      },
+      "widgets_values": [
+        "audio/StemChain",
+        true,
+        "VoxMain",
+        "VoxBacking",
+        "kick",
+        "snare",
+        "hats",
+        "bongos",
+        "shakers",
+        "tambourine",
+        "Other Percs",
+        "bass",
+        "guitar",
+        "piano",
+        "strings",
+        "brass",
+        "Other",
+        "stem_16",
+        "stem_17",
+        "stem_18",
+        "stem_19",
+        "stem_20",
+        false
+      ]
+    },
+    {
+      "id": 19,
+      "type": "Note",
+      "pos": [
+        250,
+        640
+      ],
+      "size": [
+        760,
+        480
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "output",
+          "type": 0,
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Note",
+        "text": ""
+      },
+      "widgets_values": [
+        "Follows the stem-chain sketch: one split per stage, each handing the rest of the\nsignal to the next one.\n\nFull Mixed Song -> split -> vocals + instrumental\n  vocals        -> VoxMain and VoxBacking, one ensemble each\n  instrumental  -> Drums  -> the kit: kick, snare, hats (+ toms, ride, crash, not saved)\n                     |            bongos, shakers, tambourine and Other Percs are described\n                     |            to SAM-Audio, which pulls a named sound out of anything\n                     v\n                  no drums -> bass -> no bass -> htdemucs_6s -> guitar, piano, Other\n                                                  strings and brass are described to SAM-Audio\n\nWhere the diagram and the library do not meet:\n  kick / snare / hats   the kit model's own names: kick, snare, toms, hh, ride, crash.\n                        It does not output bongos, shakers, tambourine or Other Percs.\n  bongos / shakers /    described to SAM-Audio and pulled out of the drums stem, which is\n  tambourine / Percs    what the diagram asks for and what the library can do\n  strings / brass       no model in the library targets either one; SAM-Audio is asked for\n                        them by name, from the same signal the chain carried past bass\n  guitar / piano        htdemucs_6s, the only model that produces them, in one pass\n  Other                 htdemucs_6s's own other stem\n\nEvery stage below the first split is fed the previous stage's remainder, so leftovers add up\ndown the chain. Feed them all the same instrumental instead if the drums or bass start to\nsound eaten."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      0,
+      "AUDIO"
+    ],
+    [
+      3,
+      2,
+      0,
+      4,
+      1,
+      "AUDIO"
+    ],
+    [
+      4,
+      2,
+      1,
+      4,
+      2,
+      "AUDIO"
+    ],
+    [
+      5,
+      3,
+      0,
+      4,
+      3,
+      "AUDIO"
+    ],
+    [
+      6,
+      3,
+      1,
+      4,
+      4,
+      "AUDIO"
+    ],
+    [
+      7,
+      2,
+      0,
+      5,
+      0,
+      "AUDIO"
+    ],
+    [
+      8,
+      2,
+      0,
+      6,
+      0,
+      "AUDIO"
+    ],
+    [
+      9,
+      5,
+      0,
+      7,
+      1,
+      "AUDIO"
+    ],
+    [
+      10,
+      5,
+      1,
+      7,
+      2,
+      "AUDIO"
+    ],
+    [
+      11,
+      6,
+      1,
+      7,
+      3,
+      "AUDIO"
+    ],
+    [
+      12,
+      6,
+      0,
+      7,
+      4,
+      "AUDIO"
+    ],
+    [
+      13,
+      2,
+      1,
+      8,
+      0,
+      "AUDIO"
+    ],
+    [
+      14,
+      8,
+      0,
+      9,
+      0,
+      "AUDIO"
+    ],
+    [
+      15,
+      8,
+      0,
+      10,
+      0,
+      "AUDIO"
+    ],
+    [
+      16,
+      8,
+      0,
+      11,
+      0,
+      "AUDIO"
+    ],
+    [
+      17,
+      8,
+      0,
+      12,
+      0,
+      "AUDIO"
+    ],
+    [
+      18,
+      8,
+      0,
+      13,
+      0,
+      "AUDIO"
+    ],
+    [
+      19,
+      8,
+      1,
+      14,
+      0,
+      "AUDIO"
+    ],
+    [
+      20,
+      14,
+      1,
+      15,
+      0,
+      "AUDIO"
+    ],
+    [
+      21,
+      14,
+      1,
+      16,
+      0,
+      "AUDIO"
+    ],
+    [
+      22,
+      14,
+      1,
+      17,
+      0,
+      "AUDIO"
+    ],
+    [
+      23,
+      4,
+      0,
+      18,
+      2,
+      "AUDIO"
+    ],
+    [
+      24,
+      7,
+      0,
+      18,
+      4,
+      "AUDIO"
+    ],
+    [
+      25,
+      9,
+      0,
+      18,
+      6,
+      "AUDIO"
+    ],
+    [
+      26,
+      9,
+      1,
+      18,
+      8,
+      "AUDIO"
+    ],
+    [
+      27,
+      9,
+      3,
+      18,
+      10,
+      "AUDIO"
+    ],
+    [
+      28,
+      10,
+      0,
+      18,
+      12,
+      "AUDIO"
+    ],
+    [
+      29,
+      11,
+      0,
+      18,
+      14,
+      "AUDIO"
+    ],
+    [
+      30,
+      12,
+      0,
+      18,
+      16,
+      "AUDIO"
+    ],
+    [
+      31,
+      13,
+      0,
+      18,
+      18,
+      "AUDIO"
+    ],
+    [
+      32,
+      14,
+      0,
+      18,
+      20,
+      "AUDIO"
+    ],
+    [
+      33,
+      15,
+      3,
+      18,
+      22,
+      "AUDIO"
+    ],
+    [
+      34,
+      15,
+      4,
+      18,
+      24,
+      "AUDIO"
+    ],
+    [
+      35,
+      16,
+      0,
+      18,
+      26,
+      "AUDIO"
+    ],
+    [
+      36,
+      17,
+      0,
+      18,
+      28,
+      "AUDIO"
+    ],
+    [
+      37,
+      15,
+      5,
+      18,
+      30,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

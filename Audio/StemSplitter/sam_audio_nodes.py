@@ -27,6 +27,7 @@ from .sam_support.runtime import (
     PRECISIONS,
     load_pipeline,
     model_choices,
+    model_folder_display,
     ode_options,
     register_model_folder,
     seeded_inference,
@@ -60,7 +61,13 @@ def _as_result_list(value):
 
 
 class StemSplitterSAM:
-    """Pulls the sound a text description names out of audio, leaving the rest as residual.
+    """Pulls the sound a text description names out of audio.
+
+    The second output is the model's own estimate of everything else. It is generated alongside
+    the target from the same sampling pass, not the input minus the target: Meta's model decodes
+    two streams from one latent. The two are trained to add back up to the mixture, but nothing
+    enforces it, so treat the residual as the model's idea of the rest - and take the mix minus
+    the target (PhaseInvert, or any subtract) when the complement has to be exact.
 
     SAM-Audio is driven by the description: short lowercase noun or verb phrases such as
     "man speaking" or "dog barking" match its training best. Long audio is processed in
@@ -70,13 +77,13 @@ class StemSplitterSAM:
     @classmethod
     def INPUT_TYPES(cls):
         choices = model_choices(folder_paths)
-        default = "facebook/sam-audio-large" if "facebook/sam-audio-large" in choices else choices[0]
+        default = "sam-audio-small" if "sam-audio-small" in choices else choices[0]
         return {
             "required": {
                 "audio": ("AUDIO",),
                 "model_name": (choices, {
                     "default": default,
-                    "tooltip": "Checkpoints Meta publishes, plus anything already downloaded into models/sam_audio.",
+                    "tooltip": f"Meta's checkpoints by name, plus anything already downloaded into {model_folder_display()}.",
                 }),
                 "description": ("STRING", {
                     "default": "man speaking",
@@ -109,9 +116,11 @@ class StemSplitterSAM:
                 }),
             },
             "optional": {
+                # No tooltip, on purpose: there is nothing to promise. The Judge that would
+                # rank the candidates is never attached (ensure_judge_ranker has no caller), so
+                # anything above 1 samples extra candidates and hands back the first one.
                 "reranking_candidates": ("INT", {
                     "default": 1, "min": 1, "max": 8, "step": 1,
-                    "tooltip": "Generate several candidates and let Meta's Judge choose. Above 1 downloads the optional Judge model.",
                 }),
             },
         }
@@ -120,7 +129,7 @@ class StemSplitterSAM:
     RETURN_NAMES = ("target", "residual")
     FUNCTION = "separate"
     CATEGORY = CATEGORY
-    DESCRIPTION = "Separates a described sound from audio with SAM-Audio, Meta's model. Self-contained."
+    DESCRIPTION = "Separates a described sound from audio with SAM-Audio, Meta's model. Target and residual are both generated. Self-contained."
 
     def separate(self, audio, model_name, description, precision, predict_spans, seed,
                  inference_steps, chunk_duration, chunk_overlap, reranking_candidates=1):

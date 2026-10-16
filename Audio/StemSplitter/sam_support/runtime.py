@@ -34,7 +34,12 @@ OFFICIAL_MODELS = (
     "facebook/sam-audio-large-tv",
 )
 
+# The dropdown shows each model's own name. The org prefix is only needed when talking
+# to the Hub, so it lives in the repo ids and nowhere in the UI.
+OFFICIAL_LABELS = {name.rsplit("/", 1)[-1]: name for name in OFFICIAL_MODELS}
+
 MODEL_FOLDER = "sam_audio"
+MODEL_BRAND_FOLDER = "One Solo Studios"
 MODEL_FILES = ("config.json", "checkpoint.pt")
 MIRROR_MARKER = ".verified-mirror-checkpoint"
 PRECISIONS = ("auto", "bf16", "fp32")
@@ -207,10 +212,15 @@ class SAMAudioPipeline:
             self.patcher.size = 0
 
 
+def model_folder_display() -> str:
+    """Where checkpoints live, relative to ComfyUI's models directory, for UI text."""
+    return f"models/{MODEL_BRAND_FOLDER}/{MODEL_FOLDER}"
+
+
 def register_model_folder(folder_paths: Any) -> Path:
     # Changed from upstream: checkpoints live under this pack's brand folder. The folder
     # name itself is unchanged, so every other use of it here still applies.
-    model_dir = Path(folder_paths.models_dir) / "OneSoloStudio" / MODEL_FOLDER
+    model_dir = Path(folder_paths.models_dir) / MODEL_BRAND_FOLDER / MODEL_FOLDER
     try:
         folder_paths.add_model_folder_path(
             MODEL_FOLDER, str(model_dir), is_default=True
@@ -228,7 +238,7 @@ def _is_model_directory(path: Path) -> bool:
 def discover_local_models(folder_paths: Any) -> dict[str, Path]:
     """Return stable UI labels for valid model directories in every configured root."""
     discovered: list[tuple[str, Path]] = []
-    official_directory_names = {name.rsplit("/", 1)[-1] for name in OFFICIAL_MODELS}
+    official_directory_names = set(OFFICIAL_LABELS)
     for raw_root in folder_paths.get_folder_paths(MODEL_FOLDER):
         root = Path(raw_root)
         if not root.is_dir():
@@ -260,7 +270,7 @@ def discover_local_models(folder_paths: Any) -> dict[str, Path]:
 
 
 def model_choices(folder_paths: Any) -> list[str]:
-    return [*OFFICIAL_MODELS, *discover_local_models(folder_paths).keys()]
+    return [*OFFICIAL_LABELS, *discover_local_models(folder_paths).keys()]
 
 
 def _is_gate_error(error: Exception) -> bool:
@@ -396,12 +406,14 @@ def resolve_model(model_name: str, folder_paths: Any) -> Path:
     local_models = discover_local_models(folder_paths)
     if model_name in local_models:
         return local_models[model_name]
-    if model_name not in OFFICIAL_MODELS:
+    # Either a dropdown label, or the facebook/... value an older workflow stored.
+    repo_id = model_name if model_name in OFFICIAL_MODELS else OFFICIAL_LABELS.get(model_name)
+    if repo_id is None:
         raise ValueError(
             f"Unknown SAM-Audio model {model_name!r}. Refresh the browser after adding local models."
         )
     model_root = register_model_folder(folder_paths)
-    official_directory = model_name.rsplit("/", 1)[-1]
+    official_directory = repo_id.rsplit("/", 1)[-1]
     for raw_root in folder_paths.get_folder_paths(MODEL_FOLDER):
         candidate = Path(raw_root) / official_directory
         if not _is_model_directory(candidate):
@@ -412,9 +424,9 @@ def resolve_model(model_name: str, folder_paths: Any) -> Path:
                 # Never trust a partial mirror download. The primary destination's
                 # downloader can resume or replace it after this search finishes.
                 continue
-            _verify_mirror_checkpoint(candidate, MIRROR_MODELS[model_name])
+            _verify_mirror_checkpoint(candidate, MIRROR_MODELS[repo_id])
         return candidate
-    return _download_official_model(model_name, model_root)
+    return _download_official_model(repo_id, model_root)
 
 
 def import_sam_audio() -> tuple[Any, Any]:

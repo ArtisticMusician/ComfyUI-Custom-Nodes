@@ -74,6 +74,7 @@ def _cheatsheet_text():
     for heading, entries in (("StemSplitter   -  1 model in, 2 stems out", GUIDE_SPLITTER_MODELS),
                              ("StemSplitter4  -  1 model in, 4 stems out", GUIDE_SPLITTER4_MODELS),
                              ("StemSplitter6  -  1 model in, 6 stems out", GUIDE_SPLITTER6_MODELS),
+                             ("StemSplitterDrums - 1 model in, the kit out", GUIDE_DRUM_MODELS),
                              ("StemSplitterFX -  1 model in, cleaned + removed out", GUIDE_FX_MODELS)):
         lines += ["", heading]
         for process, group in _grouped(entries):

@@ -31,8 +31,9 @@ import folder_paths
 
 try:
     from audio_separator.separator import Separator
+    from audio_separator.separator.ensembler import Ensembler
 except Exception as exc:  # keep ComfyUI loading even when the backend is missing
-    Separator = None
+    Separator = Ensembler = None
     _BACKEND_ERROR = exc
 else:
     _BACKEND_ERROR = None
@@ -41,6 +42,8 @@ else:
 BRAND = "One Solo Studios"
 CATEGORY = f"{BRAND}/Audio/StemSplitter"
 AUDIO_CATEGORY = f"{BRAND}/Audio"
+IO_CATEGORY = f"{BRAND}/Audio/IO"
+TOOLS_CATEGORY = f"{BRAND}/Audio/Tools"
 UTIL_CATEGORY = f"{BRAND}/Utils"
 
 # Demucs splits into 4 or 6 stems in a single pass. Each node below offers only the
@@ -48,11 +51,16 @@ UTIL_CATEGORY = f"{BRAND}/Utils"
 _STEMS4 = ("vocals", "drums", "bass", "other")
 _STEMS6 = ("vocals", "drums", "bass", "guitar", "piano", "other")
 
+# The drum model splits the kit itself. Its six stems are named the way the model declares
+# them, which stem_1..stem_6 come back in, and the sockets are labelled readably on top.
+_DRUMS = ("kick", "snare", "toms", "hh", "ride", "crash")
+_DRUM_SOCKETS = ("kick", "snare", "toms", "hi_hat", "ride", "crash")
+
 # The models offered in the dropdowns: the best two the library has for each of the
 # twelve processes in BuildGuide.md, so every stage has a choice.
 #
 # Ranked by audio-separator's own published SDR where it publishes one. The rest of the
-# catalogue (145 separator models: legacy checkpoints and community fine-tunes of the
+# catalogue (169 separator models: legacy checkpoints and community fine-tunes of the
 # same few bases) is deliberately not offered.
 #
 # The guide names commercial tools that have no headless build — Waves Clarity,
@@ -69,7 +77,7 @@ _ARTIFACT_STEM_NAMES = ("noise", "reverb", "echo", "wet")
 
 def _model_dir() -> str:
     """This pack's models, under the brand folder."""
-    path = os.path.join(folder_paths.models_dir, "OneSoloStudio", "audio_separator")
+    path = os.path.join(folder_paths.models_dir, "One Solo Studios", "audio_separator")
     os.makedirs(path, exist_ok=True)
     return path
 
@@ -99,9 +107,9 @@ def _clear_dir(path: str) -> None:
 
 
 def _require_backend() -> None:
-    if Separator is None:
+    if Separator is None or Ensembler is None:
         raise RuntimeError(
-            "audio-separator is required by StemSplitter but could not be "
+            "audio-separator is required by this pack's separation nodes but could not be "
             f"imported ({_BACKEND_ERROR}). Install it into the ComfyUI environment with: "
             "pip install audio-separator"
         )
@@ -209,6 +217,10 @@ def _engine(filename: str) -> "Separator":
             output_format="wav",
             sample_rate=44100,
             log_level=30,
+            # Write stems through soundfile, at the depth of the mix it was handed. The
+            # library's default writer runs every stem through pydub, which casts it to
+            # 16-bit PCM no matter how deep its input was.
+            use_soundfile=True,
         )
         engine.load_model(filename)  # downloads the weights on first use
         _ENGINES[filename] = engine
@@ -218,13 +230,33 @@ def _engine(filename: str) -> "Separator":
 _STEM_TAG = re.compile(r"_\(([^()]+)\)")
 
 
-def _write_wav(path, waveform, sample_rate):
+def _float32_input():
+    """The WAV depth switch the two save nodes share.
+
+    One definition, so the label, the default and the tooltip cannot drift apart between
+    them. On is 32-bit float - the precision the models hand over, no round trip through
+    16-bit on the way to disk. Off is 16-bit PCM, what these nodes wrote before the switch
+    existed.
+    """
+    return ("BOOLEAN", {
+        "default": True,
+        "tooltip": "Write 32-bit float WAV instead of 16-bit: full precision out of the "
+                   "models, about twice the size, and some players will not open it.",
+    })
+
+
+def _write_wav(path, waveform, sample_rate, float32=False):
+    """Write one clip as WAV: 32-bit float, or 16-bit PCM when ``float32`` is off.
+
+    Nothing is reshaped here beyond a 1-D clip becoming one channel, so a mono clip stays
+    mono. Anything a separation model needs on top of that belongs to the call that feeds
+    the engine.
+    """
     wav = waveform.detach().cpu().float()
     if wav.dim() == 1:
         wav = wav.unsqueeze(0)
-    if wav.shape[0] == 1:  # separation models expect stereo
-        wav = wav.repeat(2, 1)
-    sf.write(path, wav.numpy().T, int(sample_rate))
+    sf.write(path, wav.numpy().T, int(sample_rate),
+             subtype="FLOAT" if float32 else "PCM_16")
 
 
 def _to_comfy_audio(path):
@@ -233,34 +265,46 @@ def _to_comfy_audio(path):
     return {"waveform": waveform.unsqueeze(0), "sample_rate": int(sample_rate)}
 
 
-def _saved_file(path):
-    """A file entry for the frontend's Save as button, relative to the output folder."""
-    folder = folder_paths.get_output_directory()
+def _file_entry(path, folder, kind="output"):
+    """A file entry for the frontend: where one file sits inside its own folder."""
     rel = os.path.relpath(os.path.dirname(path), folder).replace(os.sep, "/")
     return {
         "filename": os.path.basename(path),
         "subfolder": "" if rel == "." else rel,
-        "type": "output",
+        "type": kind,
     }
+
+
+def _saved_file(path):
+    """A file entry for the frontend's Save as button, relative to the output folder."""
+    return _file_entry(path, folder_paths.get_output_directory(), "output")
 
 
 # Opus only accepts these sample rates, so other rates are moved to the next one up.
 _OPUS_RATES = (8000, 12000, 16000, 24000, 48000)
 
-# Container and encoder PyAV uses per format - the same choices ComfyUI's own audio nodes
-# make. WAV is not here: it is written directly by soundfile, which is what the save node
-# and this pack work in.
-_AV_CONTAINERS = {"flac": "flac", "mp3": "mp3", "opus": "opus"}
-_AV_ENCODERS = {"flac": "flac", "mp3": "libmp3lame", "opus": "libopus"}
+# Container and encoder PyAV uses for the two formats only it can write - the same encoders
+# ComfyUI's own audio nodes pick. WAV and FLAC are not here: soundfile writes both, and it
+# is the one that can write FLAC at 24-bit.
+_AV_CONTAINERS = {"mp3": "mp3", "opus": "opus"}
+_AV_ENCODERS = {"mp3": "libmp3lame", "opus": "libopus"}
 
 
 def _write_compressed(wav, sample_rate, path, fmt, quality):
     """Write one clip as flac, mp3 or opus.
 
-    Encoding goes through PyAV, the library ComfyUI's own audio nodes save through, with
-    the same encoders they pick - soundfile cannot write any of these three. Opus only
+    FLAC is written by soundfile at 24-bit: lossless, the ceiling every player opens. PyAV's
+    own flac encoder offers only 16- and 32-bit, and a 32-bit FLAC is refused by most
+    players. MP3 and Opus go through PyAV, the library ComfyUI's own audio nodes save
+    through, with the same encoders they pick - soundfile cannot write either. Opus only
     accepts a few sample rates, so anything else is moved to the next one up first.
     """
+    samples = wav.detach().cpu().float()
+    if fmt == "flac":
+        sf.write(path, samples.numpy().T, int(sample_rate),
+                 format="FLAC", subtype="PCM_24")
+        return
+
     import av
 
     rate = sample_rate
@@ -270,7 +314,6 @@ def _write_compressed(wav, sample_rate, path, fmt, quality):
         elif rate not in _OPUS_RATES:
             rate = next((r for r in _OPUS_RATES if r > rate), 48000)
 
-    samples = wav.float()
     if rate != sample_rate:
         samples = comfy.audio.resample(samples, sample_rate, rate)
 
@@ -387,7 +430,14 @@ def _separation(filename: str, waveform, sample_rate, pbar=None):
         report(ready)
         window["lo"], window["hi"] = ready, 95
         source = os.path.join(workdir, "input.wav")
-        _write_wav(source, waveform, sample_rate)
+        mix = waveform.detach().cpu().float()
+        if mix.dim() == 1:
+            mix = mix.unsqueeze(0)
+        if mix.shape[0] == 1:  # separation models expect stereo
+            mix = mix.repeat(2, 1)
+        # 32-bit float, so the engine's own writer has full precision to put into the
+        # stems it hands back, and nothing downstream starts from 16 bits.
+        _write_wav(source, mix, sample_rate, float32=True)
         produced = engine.separate(source)
         report(96)
         stems = []

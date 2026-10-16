@@ -35,8 +35,12 @@ from ...common import *  # noqa: F403 - the pack's shared helpers and constants
 GUIDE_SPLITTER_MODELS = (
     ("1 Vocals / Instrumental", "best instrumental score", "Roformer Model: BS-Roformer-Viperx-1297"),
     ("1 Vocals / Instrumental", "best vocals score", "Roformer Model: MelBand Roformer | Vocals by Kimberley Jensen"),
+    ("1 Vocals / Instrumental", "MDX23C checkpoint", "MDX23C Model: MDX23C-InstVoc HQ"),
+    ("1 Vocals / Instrumental", "MDX-Net, instrumental listed first", "MDX-Net Model: UVR-MDX-NET Inst HQ 4"),
+    ("1 Vocals / Instrumental", "MDX-Net, Kim Inst weights", "MDX-Net Model: Kim Inst"),
     ("2 Lead / Backing", "newest karaoke model", "Roformer Model: Mel-Roformer-Karaoke-Aufr33-Viperx"),
     ("2 Lead / Backing", "classic karaoke, VR arch", "VR Arch Single Model v5: 5_HP-Karaoke-UVR"),
+    ("2 Lead / Backing", "the other karaoke model, VR arch", "VR Arch Single Model v5: 6_HP-Karaoke-UVR"),
     ("3 Drums", "Demucs is better", "MDX-Net Model: kuielab_a_drums"),
     ("3 Drums", "Demucs is better", "MDX-Net Model: kuielab_b_drums"),
     ("4 Bass", "Demucs is better", "MDX-Net Model: kuielab_a_bass"),
@@ -53,6 +57,12 @@ GUIDE_SPLITTER4_MODELS = (
 
 GUIDE_SPLITTER6_MODELS = (
     ("5 Guitar / 6 Piano", "the only model that gives guitar and piano", "Demucs v4: htdemucs_6s"),
+)
+
+# Drum kit pieces: the library's one drum-specific model, on its own node because its six
+# stems are the kit, not the stems any other multi-stem node produces.
+GUIDE_DRUM_MODELS = (
+    ("3 Drums, kit pieces", "the only drum-specific model", "MDX23C Model: MDX23C DrumSep by aufr33-jarredou"),
 )
 
 GUIDE_FX_MODELS = (
@@ -91,8 +101,8 @@ Named by the guide but not usable here
   Acon DeVerberate, LALAL.AI  - commercial, no headless build
   DeepFilterNet               - not installed
 
-Model weights are downloaded into  ComfyUI/models/OneSoloStudio/audio_separator/
-SAM-Audio checkpoints go in       ComfyUI/models/OneSoloStudio/sam_audio/
+Model weights are downloaded into  ComfyUI/models/One Solo Studios/audio_separator/
+SAM-Audio checkpoints go in       ComfyUI/models/One Solo Studios/sam_audio/
 """
 
 

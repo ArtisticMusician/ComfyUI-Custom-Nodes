@@ -4,8 +4,6 @@ import os
 import re
 import time
 
-import soundfile as sf
-
 from ...common import *  # noqa: F403 - the pack's shared helpers and constants
 
 
@@ -26,9 +24,10 @@ class AudioSave:
                     "tooltip": "Name, and optionally a subfolder, inside ComfyUI's output folder.",
                 }),
                 "timestamp": ("BOOLEAN", {
-                    "default": True,
+                    "default": False,
                     "tooltip": "Put the time in the name so every run writes a new file.",
                 }),
+                "float32": _float32_input(),
             }
         }
 
@@ -36,10 +35,10 @@ class AudioSave:
     RETURN_NAMES = ("audio",)
     OUTPUT_NODE = True
     FUNCTION = "save"
-    CATEGORY = AUDIO_CATEGORY
+    CATEGORY = f"{IO_CATEGORY}/AudioSave"
     DESCRIPTION = "Saves any audio to ComfyUI's output folder, with playback and waveform."
 
-    def save(self, audio, filename_prefix, timestamp):
+    def save(self, audio, filename_prefix, timestamp, float32=False):
         waveform = audio["waveform"].detach().cpu().float()
         sample_rate = int(audio["sample_rate"])
         stamp = time.strftime("%Y%m%d-%H%M%S") if timestamp else None
@@ -50,7 +49,7 @@ class AudioSave:
                 wav = wav.unsqueeze(0)
             path = _output_path(filename_prefix, "wav", stamp,
                                 index=batch_number if batch > 1 else None)
-            sf.write(path, wav.numpy().T, sample_rate)
+            _write_wav(path, wav, sample_rate, float32=float32)
             saved.append(_saved_file(path))
         print("[UVR5] saved " + ", ".join(f["filename"] for f in saved))
         # "audio" is the key ComfyUI's own audio nodes return, and it is what the frontend's
@@ -99,7 +98,7 @@ class AudioConvert:
     RETURN_NAMES = ("audio",)
     OUTPUT_NODE = True
     FUNCTION = "convert"
-    CATEGORY = AUDIO_CATEGORY
+    CATEGORY = f"{IO_CATEGORY}/AudioConvert"
     DESCRIPTION = "Saves audio as FLAC, MP3 or Opus and passes it on. AudioSave writes WAV."
 
     def convert(self, audio, filename_prefix, timestamp, format, quality):
@@ -145,6 +144,10 @@ class StemSave:
                 "default": f"stem_{row}",
                 "tooltip": "What this stem is: it becomes the file name.",
             })
+        # Last, after the rows rather than among the required inputs: widgets_values in a
+        # saved workflow is a positional array, so a widget in front of name_1 would load
+        # every stem's name into the wrong field on every workflow saved before this.
+        optional["float32"] = _float32_input()
         return {
             "required": {
                 "filename_prefix": ("STRING", {
@@ -152,7 +155,7 @@ class StemSave:
                     "tooltip": "Folder, inside ComfyUI's output folder, that the stems go in.",
                 }),
                 "timestamp": ("BOOLEAN", {
-                    "default": True,
+                    "default": False,
                     "tooltip": "Put the time in the name so every run writes a new file.",
                 }),
             },
@@ -163,10 +166,10 @@ class StemSave:
     RETURN_NAMES = tuple(f"stem_{row}" for row in range(1, 21))
     OUTPUT_NODE = True
     FUNCTION = "save"
-    CATEGORY = AUDIO_CATEGORY
+    CATEGORY = f"{IO_CATEGORY}/StemSave"
     DESCRIPTION = "Saves any number of named stems as WAV, and passes each one on."
 
-    def save(self, filename_prefix, timestamp, **stems):
+    def save(self, filename_prefix, timestamp, float32=False, **stems):
         # Every wired row arrives here as audio_<n>, with its own name_<n> beside it; the
         # rows that are not wired are simply absent.
         stamp = time.strftime("%Y%m%d-%H%M%S") if timestamp else None
@@ -195,7 +198,7 @@ class StemSave:
                     wav = wav.unsqueeze(0)
                 path = _output_path(f"{filename_prefix.rstrip('/')}/{name}", "wav", stamp,
                                     index=batch_number if batch > 1 else None)
-                sf.write(path, wav.numpy().T, sample_rate)
+                _write_wav(path, wav, sample_rate, float32=float32)
                 entry = _saved_file(path)
                 row_files.append(entry)
                 saved.append(entry)
