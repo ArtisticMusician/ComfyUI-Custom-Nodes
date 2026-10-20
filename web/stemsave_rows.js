@@ -33,6 +33,11 @@ const FIELD_HEIGHT = 24;
 const GAP = 6;          // clear of the socket's own label and of the output's
 const MIN_WIDTH = 70;   // narrower than this and the field would cover something
 
+// Air above each stem's waveform, so a stack of stems reads as stems rather than as one block.
+// It rides on the player, which is the part that exists exactly when the row has audio: a row
+// with nothing to write takes none of it and collapses instead of leaving a stem-sized hole.
+const ROW_SPACING = 10;
+
 const hidden = (box) => box.style.display === "none";
 const nameWidget = (node, row) => node.widgets?.find((w) => w.name === `name_${row}`);
 
@@ -76,14 +81,15 @@ function rowsFor(node) {
         const field = makeField(node, row);
         const player = makePlayer();
         player.box.style.display = "none";
+        player.box.style.marginTop = `${ROW_SPACING}px`;
 
         box.append(field, player.box);
 
         const widget = node.addDOMWidget(ROW_WIDGET(row), "stem", box, { serialize: false });
         // The field only takes room while it is in here. While it is placed on the socket
-        // row above, only the player's height counts.
+        // row above, only the player's height counts, plus the air above it.
         widget.computeSize = (width) => [width, (node.ossFieldsPlaced ? 0 : FIELD_HEIGHT) +
-                                                (hidden(player.box) ? 0 : PLAYER_HEIGHT)];
+                                                (hidden(player.box) ? 0 : PLAYER_HEIGHT + ROW_SPACING)];
 
         rows.push({ box, field, player });
     }
@@ -128,18 +134,57 @@ function fieldLayer(nodeEl) {
     return layer;
 }
 
-/** Where a row's field should sit, in the layer's own coordinates, or null if not measurable. */
+/** Where a row's field should sit, in the layer's own coordinates, or null if not measurable.
+ *
+ * The frontend draws a node's DOM inside a container scaled by the canvas zoom, so a rect in
+ * page pixels is not a length in the node's own pixels. Everything measured comes back through
+ * this: without it the fields are out by the zoom (10% at 90%, 50% at 50%) and a height taken
+ * from the row covers the row below.
+ */
+function layerScale(layer) {
+    const box = layer.getBoundingClientRect();
+    return {
+        x: layer.offsetWidth ? box.width / layer.offsetWidth : 1,
+        y: layer.offsetHeight ? box.height / layer.offsetHeight : 1,
+    };
+}
+
+// Room above and below the field inside its row. Two fields as tall as the row touch, and a
+// column of touching boxes reads as one list rather than as one name on one row.
+const FIELD_INSET = 2;
+
+/** The row's own band: where it starts and how tall a row is, from the labels beside it. */
+function rowBand(nodeEl, row) {
+    const here = labelFor(nodeEl, `audio_${row}`);
+    if (!here) return null;
+    const box = here.getBoundingClientRect();
+    if (!box.height) return null;
+    const neighbour = labelFor(nodeEl, `audio_${row + 1}`) || labelFor(nodeEl, `audio_${row - 1}`);
+    return {
+        top: box.top,
+        right: box.right,
+        pitch: neighbour
+            ? Math.abs(neighbour.getBoundingClientRect().top - box.top)
+            : box.height,
+    };
+}
+
 export function fieldPlacement(nodeEl, layer, row) {
-    const label = labelFor(nodeEl, `audio_${row}`);
-    if (!label) return null;
+    const band = rowBand(nodeEl, row);
+    if (!band) return null;
     const out = labelFor(nodeEl, `stem_${row}`);
     const node = layer.getBoundingClientRect();
-    const spot = label.getBoundingClientRect();
+    if (!node.width || !node.height) return null;
+
+    const scale = layerScale(layer);
     const limit = out ? out.getBoundingClientRect().left : node.right;
-    const left = spot.right - node.left + GAP;
-    const width = limit - node.left - GAP - left;
-    if (!(width >= MIN_WIDTH) || spot.height <= 0) return null;
-    return { left, top: spot.top - node.top, width, height: FIELD_HEIGHT };
+    const left = (band.right - node.left) / scale.x + GAP;
+    const width = (limit - node.left) / scale.x - GAP - left;
+    // One row's height, less the air: FIELD_HEIGHT is only the ceiling, for a frontend whose
+    // rows are taller than a text field needs.
+    const height = Math.min(FIELD_HEIGHT, band.pitch / scale.y) - 2 * FIELD_INSET;
+    if (!(width >= MIN_WIDTH) || height < 8) return null;
+    return { left, top: (band.top - node.top) / scale.y + FIELD_INSET, width, height };
 }
 
 /** Put every shown row's field over its socket row. False = could not be done, so use the rows. */
@@ -198,17 +243,32 @@ function stackFields(node) {
 
 function layout(node) {
     syncFields(node);
-    if (!placeFields(node)) stackFields(node);
+    const placed = placeFields(node);
+    if (!placed) stackFields(node);
     node.setDirtyCanvas?.(true, true);
+    return placed;
 }
+
+// A node's element appears a frame or two after the node does, and a programmatically added
+// node can take longer. Without a retry the fields stay stacked for good, because nothing else
+// fires on a node nobody has touched yet.
+const RETRY_MS = 50;
+const RETRY_LIMIT = 40;
 
 /** The frontend re-lays a node out after it hides widgets, resizes or reconnects. */
 function relayout(node) {
     cancelAnimationFrame(node.ossLayoutFrame);
+    clearTimeout(node.ossLayoutTimer);
+    node.ossLayoutTimer = null;
     node.ossLayoutFrame = requestAnimationFrame(() => {
-        layout(node);
+        const placed = layout(node);
         // One more pass after the band settles, then watch the node's own size.
         requestAnimationFrame(() => layout(node));
+        if (!placed && (node.ossLayoutTries = (node.ossLayoutTries ?? 0) + 1) <= RETRY_LIMIT) {
+            node.ossLayoutTimer = setTimeout(() => relayout(node), RETRY_MS);
+        } else if (placed) {
+            node.ossLayoutTries = 0;
+        }
         if (!node.ossResizeWatch && typeof ResizeObserver !== "undefined") {
             node.ossResizeWatch = new ResizeObserver(() => layout(node));
         }

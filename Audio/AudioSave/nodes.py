@@ -35,7 +35,7 @@ class AudioSave:
     RETURN_NAMES = ("audio",)
     OUTPUT_NODE = True
     FUNCTION = "save"
-    CATEGORY = f"{IO_CATEGORY}/AudioSave"
+    CATEGORY = IO_CATEGORY
     DESCRIPTION = "Saves any audio to ComfyUI's output folder, with playback and waveform."
 
     def save(self, audio, filename_prefix, timestamp, float32=False):
@@ -98,7 +98,7 @@ class AudioConvert:
     RETURN_NAMES = ("audio",)
     OUTPUT_NODE = True
     FUNCTION = "convert"
-    CATEGORY = f"{IO_CATEGORY}/AudioConvert"
+    CATEGORY = IO_CATEGORY
     DESCRIPTION = "Saves audio as FLAC, MP3 or Opus and passes it on. AudioSave writes WAV."
 
     def convert(self, audio, filename_prefix, timestamp, format, quality):
@@ -166,7 +166,7 @@ class StemSave:
     RETURN_NAMES = tuple(f"stem_{row}" for row in range(1, 21))
     OUTPUT_NODE = True
     FUNCTION = "save"
-    CATEGORY = f"{IO_CATEGORY}/StemSave"
+    CATEGORY = IO_CATEGORY
     DESCRIPTION = "Saves any number of named stems as WAV, and passes each one on."
 
     def save(self, filename_prefix, timestamp, float32=False, **stems):

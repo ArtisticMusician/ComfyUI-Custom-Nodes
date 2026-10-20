@@ -1,0 +1,1524 @@
+{
+  "id": "60192c22-37d2-4289-a906-28dafe68d620",
+  "revision": 0,
+  "last_node_id": 167,
+  "last_link_id": 421,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "AudioLoader",
+      "pos": [
+        -1446.4179477138694,
+        -1161.4766722873258
+      ],
+      "size": [
+        899.0044207612343,
+        182.00006658380678
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            406
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+        "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+        "Node name for S&R": "AudioLoader"
+      },
+      "widgets_values": [
+        "Worthless_test.wav",
+        "",
+        null,
+        ""
+      ],
+      "widgets_values_named": {
+        "audio": "Worthless_test.wav",
+        "ossPlayer": "",
+        "Upload...": null,
+        "oss_logo": ""
+      }
+    },
+    {
+      "id": 152,
+      "type": "StemSave",
+      "pos": [
+        -23.021376448056117,
+        -1165.365566673878
+      ],
+      "size": [
+        773.521879955521,
+        473.99997258697636
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio_1",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 407
+        },
+        {
+          "name": "audio_2",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 410
+        },
+        {
+          "name": "audio_3",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 411
+        },
+        {
+          "name": "audio_4",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 412
+        },
+        {
+          "name": "audio_5",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 413
+        },
+        {
+          "name": "audio_6",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 414
+        },
+        {
+          "name": "audio_7",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 415
+        },
+        {
+          "name": "audio_8",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 416
+        },
+        {
+          "name": "audio_9",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 417
+        },
+        {
+          "name": "audio_10",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 418
+        },
+        {
+          "name": "audio_11",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 419
+        },
+        {
+          "name": "audio_12",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 420
+        },
+        {
+          "name": "audio_13",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "stem_1",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_2",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_3",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_4",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_5",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_6",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_7",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_8",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_9",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_10",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_11",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_12",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "stem_13",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+        "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+        "Node name for S&R": "StemSave"
+      },
+      "widgets_values": [
+        "audio/StemSplitter",
+        false,
+        "Vox",
+        "drums",
+        "kick",
+        "snare",
+        "toms",
+        "hi-hat",
+        "ride",
+        "crash",
+        "bass",
+        "guitar",
+        "piano",
+        "other",
+        "stem_13",
+        "stem_14",
+        "stem_15",
+        "stem_16",
+        "stem_17",
+        "stem_18",
+        "stem_19",
+        "stem_20",
+        true,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        null,
+        ""
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "audio/StemSplitter",
+        "timestamp": false,
+        "name_1": "Vox",
+        "name_2": "drums",
+        "name_3": "kick",
+        "name_4": "snare",
+        "name_5": "toms",
+        "name_6": "hi-hat",
+        "name_7": "ride",
+        "name_8": "crash",
+        "name_9": "bass",
+        "name_10": "guitar",
+        "name_11": "piano",
+        "name_12": "other",
+        "name_13": "stem_13",
+        "name_14": "stem_14",
+        "name_15": "stem_15",
+        "name_16": "stem_16",
+        "name_17": "stem_17",
+        "name_18": "stem_18",
+        "name_19": "stem_19",
+        "name_20": "stem_20",
+        "float32": true,
+        "stemsave_row_1": "",
+        "stemsave_row_2": "",
+        "stemsave_row_3": "",
+        "stemsave_row_4": "",
+        "stemsave_row_5": "",
+        "stemsave_row_6": "",
+        "stemsave_row_7": "",
+        "stemsave_row_8": "",
+        "stemsave_row_9": "",
+        "stemsave_row_10": "",
+        "stemsave_row_11": "",
+        "stemsave_row_12": "",
+        "stemsave_row_13": "",
+        "stemsave_row_14": "",
+        "stemsave_row_15": "",
+        "stemsave_row_16": "",
+        "stemsave_row_17": "",
+        "stemsave_row_18": "",
+        "stemsave_row_19": "",
+        "stemsave_row_20": "",
+        "Save as...": null,
+        "oss_logo": ""
+      }
+    },
+    {
+      "id": 165,
+      "type": "73a0a0be-b225-402a-a9de-b77ac2fe20f2",
+      "pos": [
+        -434.2776640017257,
+        -1162.9530125322087
+      ],
+      "size": [
+        149.1724609375,
+        246
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 406
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio_1",
+          "type": "AUDIO",
+          "links": [
+            407
+          ]
+        },
+        {
+          "name": "drums",
+          "type": "AUDIO",
+          "links": [
+            410
+          ]
+        },
+        {
+          "name": "kick",
+          "type": "AUDIO",
+          "links": [
+            411
+          ]
+        },
+        {
+          "name": "snare",
+          "type": "AUDIO",
+          "links": [
+            412
+          ]
+        },
+        {
+          "name": "toms",
+          "type": "AUDIO",
+          "links": [
+            413
+          ]
+        },
+        {
+          "name": "hi_hat",
+          "type": "AUDIO",
+          "links": [
+            414
+          ]
+        },
+        {
+          "name": "ride",
+          "type": "AUDIO",
+          "links": [
+            415
+          ]
+        },
+        {
+          "name": "crash",
+          "type": "AUDIO",
+          "links": [
+            416
+          ]
+        },
+        {
+          "name": "bass",
+          "type": "AUDIO",
+          "links": [
+            417
+          ]
+        },
+        {
+          "name": "guitar",
+          "type": "AUDIO",
+          "links": [
+            418
+          ]
+        },
+        {
+          "name": "piano",
+          "type": "AUDIO",
+          "links": [
+            419
+          ]
+        },
+        {
+          "name": "other",
+          "type": "AUDIO",
+          "links": [
+            420
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.41.2",
+        "previewExposures": []
+      }
+    }
+  ],
+  "links": [
+    [
+      406,
+      1,
+      0,
+      165,
+      0,
+      "AUDIO"
+    ],
+    [
+      407,
+      165,
+      0,
+      152,
+      0,
+      "AUDIO"
+    ],
+    [
+      410,
+      165,
+      1,
+      152,
+      1,
+      "AUDIO"
+    ],
+    [
+      411,
+      165,
+      2,
+      152,
+      2,
+      "AUDIO"
+    ],
+    [
+      412,
+      165,
+      3,
+      152,
+      3,
+      "AUDIO"
+    ],
+    [
+      413,
+      165,
+      4,
+      152,
+      4,
+      "AUDIO"
+    ],
+    [
+      414,
+      165,
+      5,
+      152,
+      5,
+      "AUDIO"
+    ],
+    [
+      415,
+      165,
+      6,
+      152,
+      6,
+      "AUDIO"
+    ],
+    [
+      416,
+      165,
+      7,
+      152,
+      7,
+      "AUDIO"
+    ],
+    [
+      417,
+      165,
+      8,
+      152,
+      8,
+      "AUDIO"
+    ],
+    [
+      418,
+      165,
+      9,
+      152,
+      9,
+      "AUDIO"
+    ],
+    [
+      419,
+      165,
+      10,
+      152,
+      10,
+      "AUDIO"
+    ],
+    [
+      420,
+      165,
+      11,
+      152,
+      11,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "73a0a0be-b225-402a-a9de-b77ac2fe20f2",
+        "version": 1,
+        "state": {
+          "lastGroupId": 0,
+          "lastNodeId": 167,
+          "lastLinkId": 421,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Stem Separation",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -1239.5796036114277,
+            -1188.9530125322087,
+            128,
+            68
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            383.0242756079763,
+            -1188.9530125322087,
+            128,
+            288
+          ]
+        },
+        "inputs": [
+          {
+            "id": "817e9658-58b6-42e1-b6f6-de740deca1e3",
+            "name": "audio",
+            "type": "AUDIO",
+            "linkIds": [
+              393,
+              421
+            ],
+            "pos": [
+              -1135.5796036114277,
+              -1164.9530125322087
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "ac088442-853c-4b18-904d-f49c986f5920",
+            "name": "audio_1",
+            "type": "AUDIO",
+            "linkIds": [
+              394
+            ],
+            "pos": [
+              407.0242756079763,
+              -1164.9530125322087
+            ]
+          },
+          {
+            "id": "cd16747c-0c9d-45b0-8111-393d01b607ec",
+            "name": "drums",
+            "type": "AUDIO",
+            "linkIds": [
+              395
+            ],
+            "pos": [
+              407.0242756079763,
+              -1144.9530125322087
+            ]
+          },
+          {
+            "id": "43785de1-2be3-4dad-a2f9-73e839462622",
+            "name": "kick",
+            "type": "AUDIO",
+            "linkIds": [
+              396
+            ],
+            "pos": [
+              407.0242756079763,
+              -1124.9530125322087
+            ]
+          },
+          {
+            "id": "278810fa-d0c7-4d3b-8066-b6c71baaa381",
+            "name": "snare",
+            "type": "AUDIO",
+            "linkIds": [
+              397
+            ],
+            "pos": [
+              407.0242756079763,
+              -1104.9530125322087
+            ]
+          },
+          {
+            "id": "1f60f0c1-f240-4679-83bc-cfd9cb34a768",
+            "name": "toms",
+            "type": "AUDIO",
+            "linkIds": [
+              398
+            ],
+            "pos": [
+              407.0242756079763,
+              -1084.9530125322087
+            ]
+          },
+          {
+            "id": "97066beb-b1cf-417f-b87b-a2520ed9dd05",
+            "name": "hi_hat",
+            "type": "AUDIO",
+            "linkIds": [
+              399
+            ],
+            "pos": [
+              407.0242756079763,
+              -1064.9530125322087
+            ]
+          },
+          {
+            "id": "b3d5844f-920a-465d-8251-e25084b374dd",
+            "name": "ride",
+            "type": "AUDIO",
+            "linkIds": [
+              400
+            ],
+            "pos": [
+              407.0242756079763,
+              -1044.9530125322087
+            ]
+          },
+          {
+            "id": "73b4460f-097c-4cfb-95db-2c6312c7ce11",
+            "name": "crash",
+            "type": "AUDIO",
+            "linkIds": [
+              401
+            ],
+            "pos": [
+              407.0242756079763,
+              -1024.9530125322087
+            ]
+          },
+          {
+            "id": "02f5962b-0d88-4296-bdc2-a51376918812",
+            "name": "bass",
+            "type": "AUDIO",
+            "linkIds": [
+              402
+            ],
+            "pos": [
+              407.0242756079763,
+              -1004.9530125322087
+            ]
+          },
+          {
+            "id": "316f1823-56c3-4be8-8747-905aa0b6f8ab",
+            "name": "guitar",
+            "type": "AUDIO",
+            "linkIds": [
+              403
+            ],
+            "pos": [
+              407.0242756079763,
+              -984.9530125322087
+            ]
+          },
+          {
+            "id": "203b1e8d-11e5-4678-bcf6-e7cf46d8aae0",
+            "name": "piano",
+            "type": "AUDIO",
+            "linkIds": [
+              404
+            ],
+            "pos": [
+              407.0242756079763,
+              -964.9530125322087
+            ]
+          },
+          {
+            "id": "5a69fe31-7272-4ac4-a5ca-cad4fa9e5530",
+            "name": "other",
+            "type": "AUDIO",
+            "linkIds": [
+              405
+            ],
+            "pos": [
+              407.0242756079763,
+              -944.9530125322087
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 154,
+            "type": "StemSplitter",
+            "pos": [
+              -1051.5796036114277,
+              -1163.1608513161018
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 393
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "stem_1",
+                "name": "stem_1",
+                "type": "AUDIO",
+                "links": [
+                  374
+                ]
+              },
+              {
+                "localized_name": "stem_2",
+                "name": "stem_2",
+                "type": "AUDIO",
+                "links": [
+                  375
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitter"
+            },
+            "widgets_values": [
+              "Roformer Model: BS-Roformer-Viperx-1297",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "Roformer Model: BS-Roformer-Viperx-1297",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 155,
+            "type": "StemEnsemble",
+            "pos": [
+              -753.8148273364086,
+              -1105.0174187308346
+            ],
+            "size": [
+              270,
+              162
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio_1",
+                "name": "audio_1",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 374
+              },
+              {
+                "localized_name": "opposite_1",
+                "name": "opposite_1",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 375
+              },
+              {
+                "localized_name": "audio_2",
+                "name": "audio_2",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 377
+              },
+              {
+                "localized_name": "opposite_2",
+                "name": "opposite_2",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 378
+              },
+              {
+                "localized_name": "audio_3",
+                "name": "audio_3",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": null
+              },
+              {
+                "localized_name": "opposite_3",
+                "name": "opposite_3",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "audio_1",
+                "name": "audio_1",
+                "type": "AUDIO",
+                "links": [
+                  381,
+                  382
+                ]
+              },
+              {
+                "localized_name": "audio_2",
+                "name": "audio_2",
+                "type": "AUDIO",
+                "links": [
+                  380
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemEnsemble"
+            },
+            "widgets_values": [
+              "Loudest Wins per Band, per Frame",
+              ""
+            ],
+            "widgets_values_named": {
+              "algorithm": "Loudest Wins per Band, per Frame",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 157,
+            "type": "StemSplitterFX",
+            "pos": [
+              -415.73393004335287,
+              -1379.7768658733087
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 381
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "processed",
+                "name": "processed",
+                "type": "AUDIO",
+                "links": [
+                  383
+                ]
+              },
+              {
+                "localized_name": "removed",
+                "name": "removed",
+                "type": "AUDIO",
+                "links": [
+                  384
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitterFX"
+            },
+            "widgets_values": [
+              "Roformer Model: MelBand Roformer | De-Reverb by anvuew",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "Roformer Model: MelBand Roformer | De-Reverb by anvuew",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 158,
+            "type": "StemSplitterFX",
+            "pos": [
+              -415.2971514101514,
+              -1224.2799243627082
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 382
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "processed",
+                "name": "processed",
+                "type": "AUDIO",
+                "links": [
+                  385
+                ]
+              },
+              {
+                "localized_name": "removed",
+                "name": "removed",
+                "type": "AUDIO",
+                "links": [
+                  386
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitterFX"
+            },
+            "widgets_values": [
+              "Roformer Model: MelBand Roformer | De-Reverb by anvuew",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "Roformer Model: MelBand Roformer | De-Reverb by anvuew",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 156,
+            "type": "StemSplitter",
+            "pos": [
+              -1048.1048201492656,
+              -992.3216790997863
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 421
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "stem_1",
+                "name": "stem_1",
+                "type": "AUDIO",
+                "links": [
+                  377
+                ]
+              },
+              {
+                "localized_name": "stem_2",
+                "name": "stem_2",
+                "type": "AUDIO",
+                "links": [
+                  378
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitter"
+            },
+            "widgets_values": [
+              "Roformer Model: MelBand Roformer | Vocals by Kimberley Jensen",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "Roformer Model: MelBand Roformer | Vocals by Kimberley Jensen",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 150,
+            "type": "StemSplitter6",
+            "pos": [
+              42.43533621480128,
+              -995.1149931885793
+            ],
+            "size": [
+              270,
+              162
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 380
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "vocals",
+                "name": "vocals",
+                "type": "AUDIO",
+                "links": []
+              },
+              {
+                "localized_name": "drums",
+                "name": "drums",
+                "type": "AUDIO",
+                "links": [
+                  346,
+                  395
+                ]
+              },
+              {
+                "localized_name": "bass",
+                "name": "bass",
+                "type": "AUDIO",
+                "links": [
+                  402
+                ]
+              },
+              {
+                "localized_name": "guitar",
+                "name": "guitar",
+                "type": "AUDIO",
+                "links": [
+                  403
+                ]
+              },
+              {
+                "localized_name": "piano",
+                "name": "piano",
+                "type": "AUDIO",
+                "links": [
+                  404
+                ]
+              },
+              {
+                "localized_name": "other",
+                "name": "other",
+                "type": "AUDIO",
+                "links": [
+                  405
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitter6"
+            },
+            "widgets_values": [
+              "Demucs v4: htdemucs_6s",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "Demucs v4: htdemucs_6s",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 151,
+            "type": "StemSplitterDrums",
+            "pos": [
+              53.02427560797639,
+              -1235.0470058994972
+            ],
+            "size": [
+              270,
+              162
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "type": "AUDIO",
+                "link": 346
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "kick",
+                "name": "kick",
+                "type": "AUDIO",
+                "links": [
+                  396
+                ]
+              },
+              {
+                "localized_name": "snare",
+                "name": "snare",
+                "type": "AUDIO",
+                "links": [
+                  397
+                ]
+              },
+              {
+                "localized_name": "toms",
+                "name": "toms",
+                "type": "AUDIO",
+                "links": [
+                  398
+                ]
+              },
+              {
+                "localized_name": "hi_hat",
+                "name": "hi_hat",
+                "type": "AUDIO",
+                "links": [
+                  399
+                ]
+              },
+              {
+                "localized_name": "ride",
+                "name": "ride",
+                "type": "AUDIO",
+                "links": [
+                  400
+                ]
+              },
+              {
+                "localized_name": "crash",
+                "name": "crash",
+                "type": "AUDIO",
+                "links": [
+                  401
+                ]
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemSplitterDrums"
+            },
+            "widgets_values": [
+              "MDX23C Model: MDX23C DrumSep by aufr33-jarredou",
+              ""
+            ],
+            "widgets_values_named": {
+              "model": "MDX23C Model: MDX23C DrumSep by aufr33-jarredou",
+              "oss_logo": ""
+            }
+          },
+          {
+            "id": 159,
+            "type": "StemEnsemble",
+            "pos": [
+              40.198281900153916,
+              -1494.7910318758381
+            ],
+            "size": [
+              270,
+              162
+            ],
+            "flags": {},
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "audio_1",
+                "name": "audio_1",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 383
+              },
+              {
+                "localized_name": "opposite_1",
+                "name": "opposite_1",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 384
+              },
+              {
+                "localized_name": "audio_2",
+                "name": "audio_2",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 385
+              },
+              {
+                "localized_name": "opposite_2",
+                "name": "opposite_2",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 386
+              },
+              {
+                "localized_name": "audio_3",
+                "name": "audio_3",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": null
+              },
+              {
+                "localized_name": "opposite_3",
+                "name": "opposite_3",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "audio_1",
+                "name": "audio_1",
+                "type": "AUDIO",
+                "links": [
+                  394
+                ]
+              },
+              {
+                "localized_name": "audio_2",
+                "name": "audio_2",
+                "type": "AUDIO",
+                "links": null
+              }
+            ],
+            "properties": {
+              "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
+              "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
+              "Node name for S&R": "StemEnsemble"
+            },
+            "widgets_values": [
+              "Average the Waveforms",
+              ""
+            ],
+            "widgets_values_named": {
+              "algorithm": "Average the Waveforms",
+              "oss_logo": ""
+            }
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 374,
+            "origin_id": 154,
+            "origin_slot": 0,
+            "target_id": 155,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 375,
+            "origin_id": 154,
+            "origin_slot": 1,
+            "target_id": 155,
+            "target_slot": 1,
+            "type": "AUDIO"
+          },
+          {
+            "id": 377,
+            "origin_id": 156,
+            "origin_slot": 0,
+            "target_id": 155,
+            "target_slot": 2,
+            "type": "AUDIO"
+          },
+          {
+            "id": 378,
+            "origin_id": 156,
+            "origin_slot": 1,
+            "target_id": 155,
+            "target_slot": 3,
+            "type": "AUDIO"
+          },
+          {
+            "id": 381,
+            "origin_id": 155,
+            "origin_slot": 0,
+            "target_id": 157,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 382,
+            "origin_id": 155,
+            "origin_slot": 0,
+            "target_id": 158,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 380,
+            "origin_id": 155,
+            "origin_slot": 1,
+            "target_id": 150,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 346,
+            "origin_id": 150,
+            "origin_slot": 1,
+            "target_id": 151,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 383,
+            "origin_id": 157,
+            "origin_slot": 0,
+            "target_id": 159,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 384,
+            "origin_id": 157,
+            "origin_slot": 1,
+            "target_id": 159,
+            "target_slot": 1,
+            "type": "AUDIO"
+          },
+          {
+            "id": 385,
+            "origin_id": 158,
+            "origin_slot": 0,
+            "target_id": 159,
+            "target_slot": 2,
+            "type": "AUDIO"
+          },
+          {
+            "id": 386,
+            "origin_id": 158,
+            "origin_slot": 1,
+            "target_id": 159,
+            "target_slot": 3,
+            "type": "AUDIO"
+          },
+          {
+            "id": 393,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 154,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 394,
+            "origin_id": 159,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "AUDIO"
+          },
+          {
+            "id": 395,
+            "origin_id": 150,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "AUDIO"
+          },
+          {
+            "id": 396,
+            "origin_id": 151,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 2,
+            "type": "AUDIO"
+          },
+          {
+            "id": 397,
+            "origin_id": 151,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 3,
+            "type": "AUDIO"
+          },
+          {
+            "id": 398,
+            "origin_id": 151,
+            "origin_slot": 2,
+            "target_id": -20,
+            "target_slot": 4,
+            "type": "AUDIO"
+          },
+          {
+            "id": 399,
+            "origin_id": 151,
+            "origin_slot": 3,
+            "target_id": -20,
+            "target_slot": 5,
+            "type": "AUDIO"
+          },
+          {
+            "id": 400,
+            "origin_id": 151,
+            "origin_slot": 4,
+            "target_id": -20,
+            "target_slot": 6,
+            "type": "AUDIO"
+          },
+          {
+            "id": 401,
+            "origin_id": 151,
+            "origin_slot": 5,
+            "target_id": -20,
+            "target_slot": 7,
+            "type": "AUDIO"
+          },
+          {
+            "id": 402,
+            "origin_id": 150,
+            "origin_slot": 2,
+            "target_id": -20,
+            "target_slot": 8,
+            "type": "AUDIO"
+          },
+          {
+            "id": 403,
+            "origin_id": 150,
+            "origin_slot": 3,
+            "target_id": -20,
+            "target_slot": 9,
+            "type": "AUDIO"
+          },
+          {
+            "id": 404,
+            "origin_id": 150,
+            "origin_slot": 4,
+            "target_id": -20,
+            "target_slot": 10,
+            "type": "AUDIO"
+          },
+          {
+            "id": 405,
+            "origin_id": 150,
+            "origin_slot": 5,
+            "target_id": -20,
+            "target_slot": 11,
+            "type": "AUDIO"
+          },
+          {
+            "id": 421,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 156,
+            "target_slot": 0,
+            "type": "AUDIO"
+          }
+        ],
+        "extra": {}
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6727499949325749,
+      "offset": [
+        2109.609817237894,
+        1843.359502586996
+      ]
+    },
+    "frontendVersion": "1.55.17",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

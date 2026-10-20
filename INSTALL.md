@@ -40,12 +40,8 @@ Then put the pack in `ComfyUI/custom_nodes/` and restart ComfyUI.
 ## Where the nodes appear
 
 ```
-One Solo Studios/Audio/IO/AudioLoader      AudioLoader
-One Solo Studios/Audio/IO/AudioSave        AudioSave
-One Solo Studios/Audio/IO/StemSave         StemSave
-One Solo Studios/Audio/IO/AudioConvert     AudioConvert
-One Solo Studios/Audio/Tools/PhaseInvert   PhaseInvert
-One Solo Studios/Audio/Tools/Audio2MIDI    Audio2MIDI
+One Solo Studios/Audio/IO                 AudioLoader, AudioSave, StemSave, AudioConvert
+One Solo Studios/Audio/Tools              PhaseInvert, Audio2MIDI
 One Solo Studios/Audio/StemSplitter        StemSplitter, StemSplitter4, StemSplitter6,
                                            StemSplitterFX, StemSplitterSAM, StemSplitterDrums,
                                            StemEnsemble, StemSplitter Cheatsheet

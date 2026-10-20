@@ -86,7 +86,7 @@ class Audio2MIDI:
     RETURN_NAMES = ("midi", "midi_path")
     OUTPUT_NODE = True
     FUNCTION = "transcribe"
-    CATEGORY = f"{TOOLS_CATEGORY}/Audio2MIDI"
+    CATEGORY = TOOLS_CATEGORY
     DESCRIPTION = "Audio to MIDI with Spotify's Basic Pitch. Writes a .mid file and returns it."
 
     def transcribe(self, audio, filename_prefix, timestamp, onset_threshold, frame_threshold,

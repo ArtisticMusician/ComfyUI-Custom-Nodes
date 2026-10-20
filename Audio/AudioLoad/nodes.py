@@ -42,7 +42,7 @@ class AudioLoader:
     RETURN_TYPES = ("AUDIO",)
     RETURN_NAMES = ("audio",)
     FUNCTION = "load"
-    CATEGORY = f"{IO_CATEGORY}/AudioLoader"
+    CATEGORY = IO_CATEGORY
     DESCRIPTION = "Loads an audio file from ComfyUI's input folder, with playback and waveform."
 
     @classmethod
@@ -61,7 +61,11 @@ class AudioLoader:
         entry = _file_entry(path, folder_paths.get_input_directory(), "input")
         print(f"[UVR5] loaded {entry['filename']} ({waveform.shape[1]}ch, {int(sample_rate)} Hz)")
         return {
-            "ui": {"audio": [entry], "stem_splitter_files": [entry]},
+            # No "audio" key: ComfyUI's own audio player is handed to a fixed list of its own
+            # classes, and its handler assumes any node reporting one has that player as an
+            # `audioUI` widget - it throws on this node, which has its own. This player follows
+            # the field instead, so a run has nothing to tell it.
+            "ui": {"stem_splitter_files": [entry]},
             "result": ({"waveform": waveform, "sample_rate": int(sample_rate)},),
         }
 
