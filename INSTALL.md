@@ -25,7 +25,8 @@ python -c "import basic_pitch, pretty_midi; print('ok')"        # Audio2MIDI onl
 
 ```bash
 pip install audio-separator
-pip install --no-deps basic-pitch pretty_midi resampy mir_eval   # Audio2MIDI only
+pip install --no-deps basic-pitch                              # Audio2MIDI only
+pip install pretty-midi resampy mir-eval mido                   # what --no-deps skipped
 ```
 
 `audio-separator` brings `soundfile`, `librosa`, `onnxruntime` and the rest with it.

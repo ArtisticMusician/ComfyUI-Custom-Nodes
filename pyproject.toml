@@ -1,14 +1,13 @@
 [project]
-name = "audio-stem-ensemble"
+name = "one-solo-studios"
 version = "1.0.0"
-description = "Ensemble stem separation for ComfyUI: best-2-models-per-stem, 10 blend strategies, SAM spectrogram segmentation."
-license = {text = "MIT"}
-repository = "https://github.com/ArtisticMusician/ComfyUI-Custom-Nodes"
+description = "Ensemble stem separation with UVR and SAM Audio, curated models, Audio2MIDI, Stem save node, waveform render for IO nodes, other utility nodes. Dependencies are not installed automatically. Install audio-separator and basic-pitch per INSTALL.md."
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 
 [project.urls]
 Repository = "https://github.com/ArtisticMusician/ComfyUI-Custom-Nodes"
 
 [tool.comfy]
-PublisherId = "YOUR-PUBLISHER-ID"
-DisplayName = "Audio Stem Ensemble"
+PublisherId = "artisticmusician"
+DisplayName = "ArtisticMusician-OneSoloStudios"

@@ -44,7 +44,8 @@ def _basic_pitch():
         except ImportError as exc:
             raise RuntimeError(
                 "Basic Pitch is not installed in this ComfyUI's Python. Install it with:\n"
-                "  pip install --no-deps basic-pitch pretty_midi resampy mir_eval"
+                "  pip install --no-deps basic-pitch\n"
+                "  pip install pretty-midi resampy mir-eval mido"
             ) from exc
         _BASIC_PITCH["predict"] = predict
         _BASIC_PITCH["model"] = Model(ICASSP_2022_MODEL_PATH)
