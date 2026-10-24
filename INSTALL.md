@@ -8,7 +8,7 @@ have to be in that environment:
 | `audio-separator` | `StemSplitter`, `StemSplitter4`, `StemSplitter6`, `StemSplitterFX` |
 | `basic-pitch` | `Audio2MIDI` |
 
-`StemSplitterSAM`, the cheat sheet, `AudioSave`, `AudioConvert` and `Increment` need nothing
+`StemSplitterSAM`, `AudioSave`, `AudioConvert` and `Increment` need nothing
 beyond ComfyUI itself.
 
 ## Check what is already there
@@ -41,10 +41,10 @@ Then put the pack in `ComfyUI/custom_nodes/` and restart ComfyUI.
 
 ```
 One Solo Studios/Audio/IO                 AudioLoader, AudioSave, StemSave, AudioConvert
-One Solo Studios/Audio/Tools              PhaseInvert, Audio2MIDI
+One Solo Studios/Audio/Utilities          PhaseInvert, Audio2MIDI
 One Solo Studios/Audio/StemSplitter        StemSplitter, StemSplitter4, StemSplitter6,
                                            StemSplitterFX, StemSplitterSAM, StemSplitterDrums,
-                                           StemEnsemble, StemSplitter Cheatsheet
+                                           StemEnsemble
 One Solo Studios/Utils                     Increment, TextMerge
 ```
 

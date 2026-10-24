@@ -2,7 +2,7 @@
 
 The folders mirror the node menu, so a node's category and its home on disk agree:
 
-    Audio/StemSplitter/   the splitter family, and their cheat sheet
+    Audio/StemSplitter/   the splitter family
     Audio/Audio2MIDI/     audio to MIDI
     Audio/AudioLoad/      loading audio, with the pack's player on it
     Audio/AudioSave/      saving audio, and converting it to other formats
@@ -15,7 +15,6 @@ from .Audio.Audio2MIDI.nodes import Audio2MIDI
 from .Audio.AudioLoad.nodes import AudioLoader
 from .Audio.AudioSave.nodes import AudioConvert, AudioSave, StemSave
 from .Audio.PhaseInvert.nodes import PhaseInvert
-from .Audio.StemSplitter.cheatsheet import StemSplitterCheatsheet
 from .Audio.StemSplitter.nodes import (
     StemEnsemble,
     StemSplitter,
@@ -44,13 +43,6 @@ NODE_CLASS_MAPPINGS = {
     "PhaseInvert": PhaseInvert,
     "Increment": Increment,
     "TextMerge": TextMerge,
-    # Registered last, so it comes last in its folder.
-    "StemSplitterCheatsheet": StemSplitterCheatsheet,
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    name: ("StemSplitter Cheatsheet" if name == "StemSplitterCheatsheet" else name)
-    for name in NODE_CLASS_MAPPINGS
 }
 
 __all__ = list(NODE_CLASS_MAPPINGS)

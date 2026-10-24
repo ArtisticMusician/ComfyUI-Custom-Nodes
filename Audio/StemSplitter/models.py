@@ -74,38 +74,6 @@ GUIDE_FX_MODELS = (
     ("12 De-echo", "stronger", "VR Arch Single Model v5: UVR-De-Echo-Aggressive by FoxJoy"),
 )
 
-_CHEATSHEET_TAIL = """
-Which node for which process
-----------------------------
-  1 Vocals / Instrumental    StemSplitter
-  2 Lead / Backing vocals    StemSplitter    (the karaoke models)
-  3 Drums                    StemSplitter4   Demucs beats the kuielab models
-  4 Bass                     StemSplitter4
-  5 Guitar                   StemSplitter6   only htdemucs_6s does this
-  6 Piano                    StemSplitter6   only htdemucs_6s does this
-  7 Strings                  nothing in the library does this
-  8 Brass / wind             StemSplitter    woodwinds only; no brass model exists
-  9 Other                    StemSplitter4
- 10 Dereverb                 StemSplitterFX
- 11 Denoise                  StemSplitterFX
- 12 De-echo                  StemSplitterFX
- 13 A sound you describe     StemSplitterSAM SAM-Audio, not the UVR5 library
-
-Where there is no choice, because the library has nothing to give
-  5 Guitar, 6 Piano   htdemucs_6s is the only model that produces them
-  7 Strings           nothing at all
-  8 Brass             only a woodwind model; nothing brass-specific
-
-Named by the guide but not usable here
-  Waves Clarity, Accentize DeRoom2, DX Revive, iZotope RX,
-  Acon DeVerberate, LALAL.AI  - commercial, no headless build
-  DeepFilterNet               - not installed
-
-Model weights are downloaded into  ComfyUI/models/One Solo Studios/audio_separator/
-SAM-Audio checkpoints go in       ComfyUI/models/One Solo Studios/sam_audio/
-"""
-
-
 # Everything above is this module's surface, private helpers included: the split-out
 # modules pull from here with `import *`, which otherwise skips underscore names.
 __all__ = [name for name in dir() if not name.startswith("__")]

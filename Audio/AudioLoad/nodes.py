@@ -10,11 +10,18 @@ import torch
 from ...common import *  # noqa: F403 - the pack's shared helpers and constants
 
 
+# The empty first entry, so a new node starts with nothing selected. ComfyUI takes the first
+# item in a combo as its value, which without this is whichever file sorts first in input/.
+_NO_FILE = ""
+
+
 def _audio_files():
-    """The audio files in ComfyUI's input folder, listed the way its own Load Audio lists them."""
+    """The audio files in ComfyUI's input folder, listed the way its own Load Audio lists them,
+    behind an empty entry that leaves a new node with no file chosen."""
     folder = folder_paths.get_input_directory()
     os.makedirs(folder, exist_ok=True)
-    return sorted(folder_paths.filter_files_content_types(os.listdir(folder), ["audio"]))
+    files = folder_paths.filter_files_content_types(os.listdir(folder), ["audio"])
+    return [_NO_FILE, *sorted(files)]
 
 
 class AudioLoader:
@@ -34,7 +41,8 @@ class AudioLoader:
         return {
             "required": {
                 "audio": (_audio_files(), {
-                    "tooltip": "A file in ComfyUI's input folder. Upload puts one there.",
+                    "tooltip": "A file in ComfyUI's input folder. Nothing is chosen until you "
+                               "pick one; Upload... puts a file there.",
                 }),
             }
         }
@@ -49,11 +57,19 @@ class AudioLoader:
     def IS_CHANGED(cls, audio):
         # Without this the graph is cached on the file NAME alone, so a new take dropped in
         # under a name that was used before would keep handing the old audio downstream.
+        if not audio:
+            # Nothing chosen: there is no file to watch, and the resolver would be handed the
+            # folder itself.
+            return _NO_FILE
         path = folder_paths.get_annotated_filepath(audio)
         info = os.stat(path)
         return hashlib.sha256(f"{path}:{info.st_mtime_ns}:{info.st_size}".encode()).hexdigest()
 
     def load(self, audio):
+        if not audio:
+            raise ValueError(
+                "AudioLoader: no file chosen. Pick one from the dropdown, or use Upload... ."
+            )
         # Core's own resolver, so a name cannot walk out of the input folder.
         path = folder_paths.get_annotated_filepath(audio)
         data, sample_rate = sf.read(path, dtype="float32", always_2d=True)  # [samples, channels]

@@ -5,36 +5,6 @@
   "last_link_id": 260,
   "nodes": [
     {
-      "id": 19,
-      "type": "StemSplitterCheatsheet",
-      "pos": [
-        5133.268372547474,
-        -110.69559697235377
-      ],
-      "size": [
-        760.5127103461888,
-        1275.042150360155
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "properties": {
-        "aux_id": "ArtisticMusician/ComfyUI-Custom-Nodes",
-        "ver": "a3e2a55eec90fbbf1e0d1ee5d93d59639a7491d1",
-        "Node name for S&R": "StemSplitterCheatsheet"
-      },
-      "widgets_values": [
-        "StemSplitter - which model for which job\n========================================\n\nStemSplitter   -  1 model in, 2 stems out\n  1 Vocals / Instrumental\n      BS-Roformer-Viperx-1297  -  best instrumental score\n      MelBand Roformer | Vocals by Kimberley Jensen  -  best vocals score\n  2 Lead / Backing\n      Mel-Roformer-Karaoke-Aufr33-Viperx  -  newest karaoke model\n      5_HP-Karaoke-UVR  -  classic karaoke, VR arch\n  3 Drums\n      kuielab_a_drums  -  old; Demucs is better\n      kuielab_b_drums  -  old; Demucs is better\n  4 Bass\n      kuielab_a_bass  -  old; Demucs is better\n      kuielab_b_bass  -  old; Demucs is better\n  8 Brass / wind\n      17_HP-Wind_Inst-UVR  -  only wind model; stem_2 = woodwinds\n  9 Other\n      kuielab_a_other  -  old; Demucs is better\n      kuielab_b_other  -  old; Demucs is better\n\nStemSplitter4  -  1 model in, 4 stems out\n  3-9 separate stems\n      htdemucs  -  the standard one\n      htdemucs_ft  -  fine-tuned, best quality, slower\n\nStemSplitter6  -  1 model in, 6 stems out\n  5 Guitar / 6 Piano\n      htdemucs_6s  -  the only model that gives guitar and piano\n\nStemSplitterFX -  1 model in, cleaned + removed out\n  10 Dereverb\n      MelBand Roformer | De-Reverb by anvuew  -  highest scoring\n      MelBand Roformer | De-Reverb Less Aggressive by anvuew  -  less aggressive\n  11 Denoise\n      Mel-Roformer-Denoise-Aufr33  -  highest scoring\n      Mel-Roformer-Denoise-Aufr33-Aggr  -  more aggressive\n  12 De-echo\n      UVR-De-Echo-Normal by FoxJoy  -  normal\n      UVR-De-Echo-Aggressive by FoxJoy  -  stronger\nWhich node for which process\n----------------------------\n  1 Vocals / Instrumental    StemSplitter\n  2 Lead / Backing vocals    StemSplitter    (the karaoke models)\n  3 Drums                    StemSplitter4   Demucs beats the kuielab models\n  4 Bass                     StemSplitter4\n  5 Guitar                   StemSplitter6   only htdemucs_6s does this\n  6 Piano                    StemSplitter6   only htdemucs_6s does this\n  7 Strings                  nothing in the library does this\n  8 Brass / wind             StemSplitter    woodwinds only; no brass model exists\n  9 Other                    StemSplitter4\n 10 Dereverb                 StemSplitterFX\n 11 Denoise                  StemSplitterFX\n 12 De-echo                  StemSplitterFX\n\nWhere there is no choice, because the library has nothing to give\n  5 Guitar, 6 Piano   htdemucs_6s is the only model that produces them\n  7 Strings           nothing at all\n  8 Brass             only a woodwind model; nothing brass-specific\n\nNamed by the guide but not usable here\n  Waves Clarity, Accentize DeRoom2, DX Revive, iZotope RX,\n  Acon DeVerberate, LALAL.AI  - commercial, no headless build\n  DeepFilterNet               - not installed\n\nModel weights are downloaded into  ComfyUI/models/audio_separator/\n",
-        ""
-      ],
-      "widgets_values_named": {
-        "cheat_sheet": "StemSplitter - which model for which job\n========================================\n\nStemSplitter   -  1 model in, 2 stems out\n  1 Vocals / Instrumental\n      BS-Roformer-Viperx-1297  -  best instrumental score\n      MelBand Roformer | Vocals by Kimberley Jensen  -  best vocals score\n  2 Lead / Backing\n      Mel-Roformer-Karaoke-Aufr33-Viperx  -  newest karaoke model\n      5_HP-Karaoke-UVR  -  classic karaoke, VR arch\n  3 Drums\n      kuielab_a_drums  -  old; Demucs is better\n      kuielab_b_drums  -  old; Demucs is better\n  4 Bass\n      kuielab_a_bass  -  old; Demucs is better\n      kuielab_b_bass  -  old; Demucs is better\n  8 Brass / wind\n      17_HP-Wind_Inst-UVR  -  only wind model; stem_2 = woodwinds\n  9 Other\n      kuielab_a_other  -  old; Demucs is better\n      kuielab_b_other  -  old; Demucs is better\n\nStemSplitter4  -  1 model in, 4 stems out\n  3-9 separate stems\n      htdemucs  -  the standard one\n      htdemucs_ft  -  fine-tuned, best quality, slower\n\nStemSplitter6  -  1 model in, 6 stems out\n  5 Guitar / 6 Piano\n      htdemucs_6s  -  the only model that gives guitar and piano\n\nStemSplitterFX -  1 model in, cleaned + removed out\n  10 Dereverb\n      MelBand Roformer | De-Reverb by anvuew  -  highest scoring\n      MelBand Roformer | De-Reverb Less Aggressive by anvuew  -  less aggressive\n  11 Denoise\n      Mel-Roformer-Denoise-Aufr33  -  highest scoring\n      Mel-Roformer-Denoise-Aufr33-Aggr  -  more aggressive\n  12 De-echo\n      UVR-De-Echo-Normal by FoxJoy  -  normal\n      UVR-De-Echo-Aggressive by FoxJoy  -  stronger\nWhich node for which process\n----------------------------\n  1 Vocals / Instrumental    StemSplitter\n  2 Lead / Backing vocals    StemSplitter    (the karaoke models)\n  3 Drums                    StemSplitter4   Demucs beats the kuielab models\n  4 Bass                     StemSplitter4\n  5 Guitar                   StemSplitter6   only htdemucs_6s does this\n  6 Piano                    StemSplitter6   only htdemucs_6s does this\n  7 Strings                  nothing in the library does this\n  8 Brass / wind             StemSplitter    woodwinds only; no brass model exists\n  9 Other                    StemSplitter4\n 10 Dereverb                 StemSplitterFX\n 11 Denoise                  StemSplitterFX\n 12 De-echo                  StemSplitterFX\n\nWhere there is no choice, because the library has nothing to give\n  5 Guitar, 6 Piano   htdemucs_6s is the only model that produces them\n  7 Strings           nothing at all\n  8 Brass             only a woodwind model; nothing brass-specific\n\nNamed by the guide but not usable here\n  Waves Clarity, Accentize DeRoom2, DX Revive, iZotope RX,\n  Acon DeVerberate, LALAL.AI  - commercial, no headless build\n  DeepFilterNet               - not installed\n\nModel weights are downloaded into  ComfyUI/models/audio_separator/\n",
-        "oss_logo": ""
-      }
-    },
-    {
       "id": 34,
       "type": "PrimitiveString",
       "pos": [

@@ -43,7 +43,7 @@ BRAND = "One Solo Studios"
 CATEGORY = f"{BRAND}/Audio/StemSplitter"
 AUDIO_CATEGORY = f"{BRAND}/Audio"
 IO_CATEGORY = f"{BRAND}/Audio/IO"
-TOOLS_CATEGORY = f"{BRAND}/Audio/Tools"
+UTILITIES_CATEGORY = f"{BRAND}/Audio/Utilities"
 UTIL_CATEGORY = f"{BRAND}/Utils"
 
 # Demucs splits into 4 or 6 stems in a single pass. Each node below offers only the

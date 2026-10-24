@@ -1,0 +1,14 @@
+[project]
+name = "audio-stem-ensemble"
+version = "1.0.0"
+description = "Ensemble stem separation for ComfyUI: best-2-models-per-stem, 10 blend strategies, SAM spectrogram segmentation."
+license = {text = "MIT"}
+repository = "https://github.com/ArtisticMusician/ComfyUI-Custom-Nodes"
+requires-python = ">=3.10"
+
+[project.urls]
+Repository = "https://github.com/ArtisticMusician/ComfyUI-Custom-Nodes"
+
+[tool.comfy]
+PublisherId = "YOUR-PUBLISHER-ID"
+DisplayName = "Audio Stem Ensemble"

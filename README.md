@@ -1,8 +1,14 @@
+![One Solo Studios](https://raw.githubusercontent.com/ArtisticMusician/assets/main/OneSoloStudios/OneSoloStudios_banner.png)
+
 # One Solo Studios — ComfyUI nodes
 
-Audio nodes for ComfyUI. Separation runs on [`audio-separator`](https://github.com/nomadkaraoke/python-audio-separator),
-the engine behind Ultimate Vocal Remover (UVR5); transcription runs on Spotify's Basic Pitch;
-everything else is plain audio handling.
+ComfyUI nodes from One Solo Studios: stem separation, waveform loading and saving,
+audio-to-MIDI conversion, and a few utilities.
+
+The heavy lifting is three libraries. [`audio-separator`](https://github.com/nomadkaraoke/python-audio-separator),
+the engine behind Ultimate Vocal Remover (UVR5), runs the Roformer, MDX and VR separation models;
+SAM-Audio, Meta's text-prompted separator, pulls out a sound you describe in words; Spotify's
+Basic Pitch does audio-to-MIDI. Everything else is plain audio handling.
 
 Requirements and install steps: [INSTALL.md](INSTALL.md). In short, ComfyUI plus
 `audio-separator` in the same Python ComfyUI runs in, and `basic-pitch` as well if you want
@@ -12,10 +18,10 @@ Requirements and install steps: [INSTALL.md](INSTALL.md). In short, ComfyUI plus
 
 ```
 One Solo Studios/Audio/IO                 AudioLoader, AudioSave, StemSave, AudioConvert
-One Solo Studios/Audio/Tools              PhaseInvert, Audio2MIDI
+One Solo Studios/Audio/Utilities          PhaseInvert, Audio2MIDI
 One Solo Studios/Audio/StemSplitter        StemSplitter, StemSplitter4, StemSplitter6,
                                            StemSplitterFX, StemSplitterSAM, StemSplitterDrums,
-                                           StemEnsemble, StemSplitter Cheatsheet
+                                           StemEnsemble
 One Solo Studios/Utils                     Increment, TextMerge
 ```
 
@@ -24,6 +30,8 @@ The search box matches "oss" and "one solo studios" as well as the node name.
 ## Nodes
 
 ### StemSplitter — two stems out
+
+<img width="355" alt="StemSplitter node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSplitter.png">
 
 | | |
 |---|---|
@@ -34,17 +42,41 @@ Splits a clip into two stems (Vocals / Instrumental, Lead / Backing, Drums / All
 …). `stem_1` is the model's **primary** stem and `stem_2` the complement, taken from the
 order the model itself declares — so for a vocals model, `stem_1` is the vocals.
 
+**Models** — everything in the dropdown, in dropdown order (the prefix in each name is the
+architecture it comes from):
+
+- Vocals / Instrumentals — `Roformer Model: BS-Roformer-Viperx-1297` (best instrumental
+  score), `Roformer Model: MelBand Roformer | Vocals by Kimberley Jensen` (best vocals score),
+  `MDX23C Model: MDX23C-InstVoc HQ`, `MDX-Net Model: UVR-MDX-NET Inst HQ 4`,
+  `MDX-Net Model: Kim Inst`
+- Lead / Backing vocals — `Roformer Model: Mel-Roformer-Karaoke-Aufr33-Viperx`,
+  `VR Arch Single Model v5: 5_HP-Karaoke-UVR`, `VR Arch Single Model v5: 6_HP-Karaoke-UVR`
+- Drums / Instrumentals — `MDX-Net Model: kuielab_a_drums`, `MDX-Net Model: kuielab_b_drums`
+- Bass / Instrumentals — `MDX-Net Model: kuielab_a_bass`, `MDX-Net Model: kuielab_b_bass`
+- Brass / wind — `VR Arch Single Model v5: 17_HP-Wind_Inst-UVR` (the only wind model in the
+  library; `stem_2` comes back as the woodwinds)
+- Other / Instrumentals — `MDX-Net Model: kuielab_a_other`, `MDX-Net Model: kuielab_b_other`
+
 ### StemSplitter4 — four stems in one pass
+
+<img width="355" alt="StemSplitter4 node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSplitter4.png">
 
 | | |
 |---|---|
-| Inputs | `audio` (AUDIO), `model` (dropdown, Demucs v4 models) |
+| Inputs | `audio` (AUDIO), `model` (dropdown) |
 | Outputs | `vocals`, `drums`, `bass`, `other` (AUDIO) |
 
 Demucs in a single pass, four stems. The dropdown holds only the models that produce four,
 so nothing here can ask for a stem that doesn't exist.
 
+**Models**
+
+- `Demucs v4: htdemucs` — the standard one
+- `Demucs v4: htdemucs_ft` — fine-tuned, best quality, slower
+
 ### StemSplitter6 — six stems in one pass
+
+<img width="355" alt="StemSplitter6 node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSplitter6.png">
 
 | | |
 |---|---|
@@ -55,7 +87,13 @@ Only `htdemucs_6s` is offered, because it is the only model in the library that 
 guitar and piano — every output always carries audio. Use this one when you need guitar or
 piano; the four-stem node is faster for everything else.
 
+**Models**
+
+- `Demucs v4: htdemucs_6s` — guitar and piano exist in no other model
+
 ### StemSplitterDrums — the kit, piece by piece
+
+<img width="346" alt="StemSplitterDrums node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSplitterDrums.png">
 
 | | |
 |---|---|
@@ -67,7 +105,14 @@ rather than the mix: feed it a drum track or a drums stem from a splitter, not a
 is on its own node because its six stems are the pieces of the kit — the six sockets on
 StemSplitter6 belong to Demucs, which produces nothing like them.
 
+**Models**
+
+- `MDX23C Model: MDX23C DrumSep by aufr33-jarredou` — kick, snare, toms, hi-hat, ride, crash.
+  The library publishes no SDR score for it.
+
 ### StemSplitterFX — denoise / dereverb / de-echo
+
+<img width="346" alt="StemSplitterFX node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSplitterFX.png">
 
 | | |
 |---|---|
@@ -79,11 +124,23 @@ Applies a UVR cleanup model. `processed` is the cleaned signal (the model's "no 
 noise or echo itself. Leave `removed` unwired if you don't want it; the node runs the same
 either way.
 
+**Models**
+
+- Dereverb — `Roformer Model: MelBand Roformer | De-Reverb by anvuew` (highest scoring),
+  `Roformer Model: MelBand Roformer | De-Reverb Less Aggressive by anvuew`
+- Denoise — `Roformer Model: Mel-Roformer-Denoise-Aufr33` (highest scoring),
+  `Roformer Model: Mel-Roformer-Denoise-Aufr33-Aggr`
+- De-echo — `VR Arch Single Model v5: UVR-De-Echo-Normal by FoxJoy`,
+  `VR Arch Single Model v5: UVR-De-Echo-Aggressive by FoxJoy`
+
 ### StemSplitterSAM — separate a sound you describe in words
+
+<img width="372" alt="StemSplitterSAM node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemSsplitterSam.png">
 
 | | |
 |---|---|
-| Inputs | `audio` (AUDIO), `description` (STRING), `model` (dropdown), `predict_spans`, `reranking` |
+| Inputs | `audio` (AUDIO), `model_name` (dropdown), `description` (STRING), `precision`, `predict_spans`, `seed`, `inference_steps`, `chunk_duration`, `chunk_overlap` |
+| Optional | `reranking_candidates` |
 | Outputs | `target`, `residual` (AUDIO) |
 
 SAM-Audio, Meta's text-prompted separator: type what you want pulled out — "a tone",
@@ -91,11 +148,21 @@ SAM-Audio, Meta's text-prompted separator: type what you want pulled out — "a 
 `residual`. It is a different engine from the UVR5 models above and does not use
 `audio-separator`.
 
+**Models** — Meta's checkpoints, by name:
+
+- `sam-audio-small` (the default), `sam-audio-base`, `sam-audio-large`
+- `sam-audio-small-tv`, `sam-audio-base-tv`, `sam-audio-large-tv`
+
+The dropdown also lists any checkpoint already downloaded into
+`models/One Solo Studios/sam_audio/`, so a local copy is offered alongside Meta's.
+
 Its code is vendored in `Audio/StemSplitter/sam_support/` (MIT, licence included) rather than
 imported from another node pack, so this pack works on its own. Weights live in
 `models/One Solo Studios/sam_audio/`.
 
 ### StemEnsemble — blend a stem, and its opposite, side by side
+
+<img width="347" alt="StemEnsemble node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/StemSplitter/StemEnsemble.png">
 
 | | | |
 |---|---|---|
@@ -125,52 +192,54 @@ Eight rows are declared up front for the same reason StemSave declares twenty �
 a node's inputs when the class is written. Rows you leave unwired do nothing, and the front end
 drops the empty ones past the last row in use.
 
-### StemSplitter Cheatsheet — the model list, pre-filled
-
-No inputs, no outputs, nothing to wire. Drag it onto the canvas and the text is already on
-it: which model for which of the twelve processes, which node to use for each, where the
-library has no second option, and which models named by the guide cannot run here.
-
-It is **generated from the same lists the dropdowns use** — `Audio/StemSplitter/models.py` —
-so the sheet cannot fall out of step with them. The text is a normal editable widget: add
-your own notes, or copy it into the graph as a reference.
-
 ### Audio2MIDI — audio to MIDI
+
+<img width="355" alt="Audio2MIDI node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/Utility/Audio2MIDI.png">
 
 | | |
 |---|---|
-| Inputs | `audio` (AUDIO), `onset_threshold`, `frame_threshold`, `minimum_note_length` |
+| Inputs | `audio` (AUDIO), `filename_prefix` (STRING), `timestamp` (BOOLEAN), `onset_threshold`, `frame_threshold`, `minimum_note_length` |
 | Outputs | `midi` (MIDI), `midi_path` (STRING) |
 
-Spotify's **Basic Pitch** transcribes pitched audio into notes. No UVR5 model is involved.
+Spotify's **Basic Pitch** converts pitched audio into notes. No UVR5 model is involved.
 
 - `midi` is a `mido.MidiFile`, the same MIDI type other ComfyUI audio packs use, so it wires
   straight into MIDI nodes.
-- `midi_path` is the `.mid` file, written into ComfyUI's `output/` folder. **Save as...** on
-  the node puts a copy anywhere you like.
+- `midi_path` is the `.mid` file, written under `filename_prefix` in ComfyUI's `output/`
+  folder. **Save as...** on the node puts a copy anywhere you like.
 - The three knobs are Basic Pitch's own: raise `onset_threshold` to drop tentative note
   starts, raise `frame_threshold` to drop notes that fade out, raise `minimum_note_length`
   (milliseconds) to drop very short notes.
 
 Works best on one instrument at a time. On a full mix it picks out whichever pitched content
-is loudest, so splitting first and transcribing a stem gives better results.
+is loudest, so splitting first and converting a stem gives better results.
 
 ### AudioLoader — load audio, and hear it
 
+<img width="355" alt="AudioLoader node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/IO/AudioLoader.png">
+
 | | |
 |---|---|
-| Inputs | `audio` (dropdown: the audio files in ComfyUI's `input/` folder) |
+| Inputs | `audio` (dropdown: the audio files in ComfyUI's `input/` folder, with nothing chosen until you pick one) |
 | Outputs | `audio` (AUDIO) |
 
-Loads one audio file out of ComfyUI's `input/` folder. Unlike core's Load Audio it draws the
-pack's player — the same waveform, playhead and play button the save nodes use — so a file can
+Loads one audio file out of ComfyUI's `input/` folder. The dropdown starts with nothing
+chosen, so a new node never loads whichever file happens to sort first — pick a file and
+the player fills in. Unlike core's Load Audio it draws the pack's player — the same waveform, playhead and play button the save nodes use — so a file can
 be checked before anything is run. **Upload...** puts a file into `input/` and selects it, since
 the dropdown can only list what was there when the app started.
+
+The waveform is the point of drawing it here: it spans the whole file, so silence is visible at
+a glance. That matters on stems, where a long flat stretch is normal — the instrument simply is
+not playing — and a stem that reads as silence end to end shows a split that went wrong without
+playing a second of it.
 
 Replacing a file with a new take under the same name re-runs whatever is downstream: the node
 keys its cache on the file's size and modification time, not on its name alone.
 
 ### AudioSave — write audio to disk
+
+<img width="355" alt="AudioSave node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/IO/AudioSave.png">
 
 | | |
 |---|---|
@@ -180,6 +249,11 @@ keys its cache on the file's size and modification time, not on its name alone.
 Writes any AUDIO to ComfyUI's `output/` folder as WAV under `filename_prefix` (default
 `audio/StemSplitter`), and passes the audio through so it can still feed other nodes.
 `timestamp` appends the date and time to the file name.
+
+It draws the waveform of the file it just wrote, and the waveform is what makes a stem review
+quick: stems are silent wherever their instrument is, so the picture shows exactly where each
+one has audio and where it has gaps — check that a split found something, and see how much of
+the clip it actually covers, without listening through the whole file.
 
 `float32` writes 32-bit float WAV instead of 16-bit PCM. Stems come out of the separation
 models in 32 bits, so this is the setting that keeps every sample of what the model
@@ -194,6 +268,8 @@ button, and the waveform player on these nodes, are `web/stemsplitter_save.js`.
 
 ### AudioConvert — write audio in another format
 
+<img width="351" alt="AudioConvert node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/IO/AudioConvert.png">
+
 | | |
 |---|---|
 | Inputs | `audio` (AUDIO), `filename_prefix` (STRING), `timestamp`, `format`, `quality` |
@@ -205,7 +281,11 @@ because it is the one lossless option in the list, and it is written at 24-bit �
 lossless, and small enough to hand off. MP3 and Opus are lossy: 160–192 kbps stereo is where
 they stop being audible, and the data they drop never comes back.
 
+It draws the same waveform player as AudioSave, so the converted file can be checked in place.
+
 ### StemSave — many named stems, one node
+
+<img width="351" alt="StemSave node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/IO/StemSave.png">
 
 | | |
 |---|---|
@@ -218,6 +298,10 @@ it is), wire audio into it, and that row is written to `<filename_prefix>/<name>
 Rows you don't wire are skipped, and the front end drops the empty ones past the last row in
 use, so the node stays only as tall as the work you are doing.
 
+Every written row gets its own waveform player, one under the other. On a page of stems that
+is the fastest review there is: silent gaps stack up as flat lines, so a stem that came back
+empty or a mix with no low end is visible without soloing anything.
+
 `float32` is one switch for the whole node: on, every stem is written as 32-bit float WAV
 instead of 16-bit PCM. It sits after the rows rather than among the fields at the top so
 workflows saved before it existed still line up.
@@ -229,6 +313,8 @@ The name becomes a file name, so it is kept to the folder you put under `filenam
 a name containing `../` cannot walk out of the output folder.
 
 ### PhaseInvert — flip the polarity
+
+<img width="370" alt="PhaseInvert node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Audio/Utility/Phaseinvert.png">
 
 | | | |
 |---|---|---|
@@ -246,16 +332,20 @@ level.
 
 ### Increment — counting, for numbering files
 
+<img width="363" alt="Increment node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Utility/Increment.png">
+
 | | |
 |---|---|
-| Inputs | `mode`, `number`, `pad_zeros`, `step` |
+| Inputs | `mode`, `starting_number`, `padding`, `step` |
 | Outputs | `value` (STRING) |
 
 Returns its number as text and moves on, so a queue of runs numbers its own files: 1, 2, 3…
-`mode` counts up or down, `pad_zeros` sets the width (`1` gives `01`, `2` gives `001`), and
+`mode` counts up or down, `padding` sets the width (`1` gives `01`, `2` gives `001`), and
 `step` sets how far each run moves. Wire `value` into a `filename_prefix` to use it.
 
 ### TextMerge — join any number of texts
+
+<img width="363" alt="TextMerge node" src="https://raw.githubusercontent.com/ArtisticMusician/assets/main/comfyUI_custom_nodes/Utility/TextMerge.png">
 
 | | | |
 |---|---|---|
@@ -281,47 +371,14 @@ twenty because it must return one output per row, and outputs cannot grow.)
 The dropdowns offer **the models the guide names for each of the twelve processes**, filtered to
 the ones `audio-separator` actually lists — a choice at every stage where the library has a
 second model for it — rather than its whole catalogue of 169 separator models. Where
-`audio-separator` publishes SDR scores, the ranking comes from those.
-
-**StemSplitter — the two-stem stages**
-
-1. Vocals / Instrumentals — `BS-Roformer-Viperx-1297` (best instrumental score),
-   `MelBand Roformer | Vocals by Kimberley Jensen` (best vocals score),
-   `MDX23C-InstVoc HQ`, `UVR-MDX-NET Inst HQ 4`, `Kim Inst`
-2. Lead / Backing vocals — `Mel-Roformer-Karaoke-Aufr33-Viperx`, `5_HP-Karaoke-UVR`,
-   `6_HP-Karaoke-UVR`
-3. Drums / Instrumentals — `kuielab_a_drums`, `kuielab_b_drums`
-4. Bass / Instrumentals — `kuielab_a_bass`, `kuielab_b_bass`
-8. Brass / wind — `17_HP-Wind_Inst-UVR` (the only wind model in the library)
-9. Other / Instrumentals — `kuielab_a_other`, `kuielab_b_other`
-
-**StemSplitter4 — four stems in one pass**
-
-`htdemucs` (the standard one) and `htdemucs_ft` (fine-tuned, best quality, slower). These
-cover drums, bass and other as independent tracks and generally beat the kuielab MDX models
-above for all three.
-
-**StemSplitter6 — six stems in one pass**
-
-`htdemucs_6s`, the only model that also produces guitar and piano.
-
-**StemSplitterDrums — the pieces of the kit**
-
-`MDX23C DrumSep by aufr33-jarredou` — kick, snare, toms, hi-hat, ride, crash. The only
-drum-specific model in the library, and the library publishes no SDR for it.
-
-**StemSplitterFX — the cleanup stages**
-
-10. Dereverb — `MelBand Roformer | De-Reverb by anvuew`,
-    `MelBand Roformer | De-Reverb Less Aggressive by anvuew`
-11. Denoise — `Mel-Roformer-Denoise-Aufr33`, `Mel-Roformer-Denoise-Aufr33-Aggr`
-12. De-echo — `UVR-De-Echo-Normal`, `UVR-De-Echo-Aggressive`
+`audio-separator` publishes SDR scores, the ranking comes from those. Each node's section above
+lists what is in its own dropdown.
 
 **Processes with no two-model choice, because the library has nothing to offer**
 
 - 5. Guitar and 6. Piano exist *only* inside `htdemucs_6s`.
 - 7. Strings — no model in the library targets strings at all.
-- 8. Brass — only the woodwind model above; nothing brass-specific exists.
+- 8. Brass — only the woodwind model on StemSplitter; nothing brass-specific exists.
 
 The guide also names Waves Clarity, Accentize DeRoom2 and DX Revive, iZotope RX, Acon
 DeVerberate and LALAL.AI — all commercial, with no headless build — and DeepFilterNet, which
@@ -334,15 +391,23 @@ its exact catalogue name to the matching list in `Audio/StemSplitter/models.py`.
 > Models run on CUDA through PyTorch. MDX (`*.onnx`) models use ONNX Runtime instead; without
 > the GPU build (`onnxruntime-gpu`) they fall back to CPU and are slower.
 
-## Example workflow
+## Example workflows
 
-[`example_workflow.json`](example_workflow.json): Load Audio → BS-Roformer splitter → preview
-the vocals → denoise them with UVR DeNoise → preview, plus the instrumental saved to
-`output/audio/`. Pick or upload your own clip in the **Load Audio** node first.
+Five workflows in [`Examples/`](Examples/). Open one with **Workflow → Open** in ComfyUI; each
+one's **AudioLoader** still points at the file it was saved with, so pick or upload your own
+clip there first.
+
+| Workflow | What it does |
+|---|---|
+| [`StemSplitter_Vox-Inst.json`](Examples/StemSplitter_Vox-Inst.json) | The smallest real chain. Two StemSplitter models — BS-Roformer for the instrumental, the Kimberley Jensen vocals model — blended by StemEnsemble at `Average by Frequency`, and that blend dereverbed by two StemSplitterFX nodes recombined at `Loudest Wins by Frequency`. Three AudioSave nodes take Vox, Inst and Removed Reverb. |
+| [`OneSoloStudios-FastlyMessy_stem_separator.json`](Examples/OneSoloStudios-FastlyMessy_stem_separator.json) | The same job with every node left on the canvas: the two vocals models, `htdemucs_6s`, `MDX23C DrumSep`, dereverb, two StemEnsembles, everything landing in one StemSave bank (Vox, drums, kick, snare, toms, hi-hat, ride…). |
+| [`OneSoloStudios-Fastly-Neat_stem_separator.json`](Examples/OneSoloStudios-Fastly-Neat_stem_separator.json) | Those same eight separation nodes wrapped in one subgraph, so the canvas reads AudioLoader → subgraph → StemSave. |
+| [`SimpleStemSplitAndMidi.json`](Examples/SimpleStemSplitAndMidi.json) | Stems and MIDI in one run: BS-Roformer, the Kimberley vocals model, `htdemucs_6s`, drum sep and dereverb, saved as named stems, then seven Audio2MIDI nodes writing a `.mid` per stem. Folder names are built from Primitive String, TextMerge and Increment, so each run gets its own numbered folder. |
+| [`SimpleStemSplitAndMidi_Neat.json`](Examples/SimpleStemSplitAndMidi_Neat.json) | The same thirty-two nodes inside a `Split Stems And MIDI` subgraph, with an `Iteration` counter and a note on where the files land. |
 
 ## Output format
 
-Every stem comes back as a standard ComfyUI `AUDIO` (`{"waveform": [1, C, S], "sample_rate"}`
+Every stem comes back as a standard ComfyUI `AUDIO` (`{"waveform": [1, C, S], "sample_rate"}`)
 float32). The separation models run at 44.1 kHz, so stems come back at 44.1 kHz regardless of
 the input rate.
 
@@ -359,7 +424,7 @@ __init__.py            registers every node, in the order they appear in the men
 common.py              shared helpers: reading audio, writing files, running a model
 web/                   front end scripts: the badge, the player, the row trimmer,
                        the counting widget
-Audio/StemSplitter/    the splitter family, the cheat sheet, and vendored SAM support
+Audio/StemSplitter/    the splitter family, and vendored SAM support
 Audio/Audio2MIDI/      audio to MIDI
 Audio/AudioSave/       saving, and converting to other formats
 Audio/PhaseInvert/     polarity

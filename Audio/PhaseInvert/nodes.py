@@ -30,7 +30,7 @@ class PhaseInvert:
     RETURN_TYPES = ("AUDIO",)
     RETURN_NAMES = ("inverted",)
     FUNCTION = "invert"
-    CATEGORY = TOOLS_CATEGORY
+    CATEGORY = UTILITIES_CATEGORY
     DESCRIPTION = "Flips the polarity of a clip, so it cancels against the original when mixed."
 
     def invert(self, audio):
